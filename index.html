@@ -2,15 +2,14 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>Beatster</title>
+  <title>Beatster Debug</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Beatster</h1>
-  <video id="camera" autoplay></video>
-  <button onclick="resumePlayback()">▶️ Play</button>
+  <h1>Beatster - Test Mode</h1>
+  <button onclick="playTestTrack()">▶️ Play test track</button>
+  <button onclick="resumePlayback()">▶️ Resume</button>
 
-  <script src="qr-scanner.min.js"></script>
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
     let accessToken = '';
@@ -23,21 +22,6 @@
       const scopes = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
       window.location = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scopes)}`;
     }
-
-    const video = document.getElementById('camera');
-    console.log("QR Scanner wordt geïnitialiseerd");
-    console.log("Camera element:", video);
-
-    const scanner = new QrScanner(video, result => {
-      console.log("QR code gevonden:", result.data);
-      const trackUri = result.data.replace('https://open.spotify.com/track/', 'spotify:track:').split('?')[0];
-      playTrack(trackUri);
-      scanner.stop();
-    });
-
-    scanner.start()
-      .then(() => console.log("QR scanner is gestart"))
-      .catch(e => console.error("Camera fout:", e));
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       accessToken = localStorage.getItem('access_token');
@@ -52,23 +36,30 @@
         deviceId = device_id;
       });
 
+      player.addListener('initialization_error', e => console.error(e));
+      player.addListener('authentication_error', e => console.error(e));
+      player.addListener('account_error', e => console.error(e));
+      player.addListener('playback_error', e => console.error(e));
+
       player.connect();
     };
 
-    function playTrack(uri) {
-      console.log("Track wordt afgespeeld:", uri);
+    function playTestTrack() {
+      const testUri = 'spotify:track:5XVjNRubJUW0iPhhSWpLCj'; // Alice Deejay - Better Off Alone
+      console.log("TEST: Afspelen testtrack...");
       fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
-        body: JSON.stringify({ uris: [uri] }),
+        body: JSON.stringify({ uris: [testUri] }),
         headers: {
           'Authorization': 'Bearer ' + accessToken,
           'Content-Type': 'application/json'
         }
-      });
-      setTimeout(() => {
-        console.log("Pauze na 3 seconden");
-        player.pause();
-      }, 3000);
+      }).then(() => {
+        setTimeout(() => {
+          console.log("TEST: Pauze na 3 seconden");
+          player.pause();
+        }, 3000);
+      }).catch(err => console.error("Play API fout:", err));
     }
 
     function resumePlayback() {
