@@ -11,6 +11,7 @@
   <button onclick="playTestTrack()">▶️ Play test track</button>
   <button onclick="resumePlayback()">▶️ Resume</button>
 
+  <script src="qr-scanner.min.js"></script>
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
     function log(msg) {
@@ -26,12 +27,16 @@
     let player;
 
     if (!localStorage.getItem('access_token')) {
-  const clientId = '2f68d1568fe84f859272ac3d517257a1';
-  const redirectUri = 'https://jklunder.github.io/beatster/callback';
-  const scopes = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
-  window.location = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
-}
-
+      const clientId = '2f68d1568fe84f859272ac3d517257a1';
+      const redirectUri = 'https://jklunder.github.io/beatster/callback';
+      const scopes = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
+      const url = 'https://accounts.spotify.com/authorize' +
+        '?client_id=' + clientId +
+        '&response_type=token' +
+        '&redirect_uri=' + encodeURIComponent(redirectUri) +
+        '&scope=' + encodeURIComponent(scopes);
+      window.location = url;
+    }
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       accessToken = localStorage.getItem('access_token');
