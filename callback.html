@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Redirecting...</title></head>
+<body>
+<script>
+  const hash = window.location.hash.substring(1).split('&').reduce((acc, cur) => {
+    const [key, val] = cur.split('=');
+    acc[key] = val;
+    return acc;
+  }, {});
+
+  localStorage.setItem('access_token', hash.access_token);
+  window.location.href = 'https://jklunder.github.io/beatster/';
+</script>
+</body>
+</html>

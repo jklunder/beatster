@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Beatster</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Beatster</h1>
+  <video id="camera" autoplay></video>
+  <button onclick="resumePlayback()">▶️ Play</button>
+
+  <script src="qr-scanner.min.js"></script>
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script>
+    let accessToken = '';
+    let deviceId = '';
+    let player;
+
+    if (!window.location.hash.includes('access_token')) {
+      const clientId = '2f68d1568fe84f859272ac3d517257a1';
+      const redirectUri = 'https://jklunder.github.io/beatster/callback';
+      const scopes = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
+      window.location = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scopes)}`;
+    }
+
+    const video = document.getElementById('camera');
+    const scanner = new QrScanner(video, result => {
+      const trackUri = result.data.replace('https://open.spotify.com/track/', 'spotify:track:').split('?')[0];
+      playTrack(trackUri);
+      scanner.stop();
+    });
+    scanner.start();
+
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      accessToken = localStorage.getItem('access_token');
+      player = new Spotify.Player({
+        name: 'Beatster Player',
+        getOAuthToken: cb => cb(accessToken),
+        volume: 0.8
+      });
+      player.addListener('ready', ({ device_id }) => { deviceId = device_id; });
+      player.connect();
+    };
+
+    function playTrack(uri) {
+      fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ uris: [uri] }),
+        headers: {
+          'Authorization': 'Bearer ' + accessToken,
+          'Content-Type': 'application/json'
+        }
+      });
+      setTimeout(() => { player.pause(); }, 3000);
+    }
+
+    function resumePlayback() {
+      player.resume();
+    }
+  </script>
+</body>
+</html>
