@@ -3,14 +3,19 @@
 <head><title>Redirecting...</title></head>
 <body>
 <script>
-  const hashParams = new URLSearchParams(window.location.hash.slice(1));
-  const accessToken = hashParams.get('access_token');
+  try {
+    const hash = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hash.get('access_token');
 
-  if (accessToken) {
+    if (!accessToken || accessToken === 'undefined') {
+      document.body.innerHTML = "<h2>❌ Geen geldige access token ontvangen.</h2>";
+      throw new Error("Geen geldige access token ontvangen.");
+    }
+
     localStorage.setItem('access_token', accessToken);
     window.location.href = 'https://jklunder.github.io/beatster/';
-  } else {
-    document.body.innerHTML = "<h2>❌ Geen toegangstoken gevonden. Probeer opnieuw in te loggen.</h2>";
+  } catch (e) {
+    console.error("Callback-fout:", e);
   }
 </script>
 </body>
