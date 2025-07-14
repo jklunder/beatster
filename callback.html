@@ -3,13 +3,15 @@
 <head><title>Redirecting...</title></head>
 <body>
 <script>
-  const hash = window.location.hash.substring(1).split('&').reduce((acc, cur) => {
-    const [key, val] = cur.split('=');
-    acc[key] = val;
-    return acc;
-  }, {});
-  localStorage.setItem('access_token', hash.access_token);
-  window.location.href = 'https://jklunder.github.io/beatster/';
+  const hashParams = new URLSearchParams(window.location.hash.slice(1));
+  const accessToken = hashParams.get('access_token');
+
+  if (accessToken) {
+    localStorage.setItem('access_token', accessToken);
+    window.location.href = 'https://jklunder.github.io/beatster/';
+  } else {
+    document.body.innerHTML = "<h2>❌ Geen toegangstoken gevonden. Probeer opnieuw in te loggen.</h2>";
+  }
 </script>
 </body>
 </html>
