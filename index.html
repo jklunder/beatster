@@ -21,16 +21,23 @@
       const clientId = '2f68d1568fe84f859272ac3d517257a1';
       const redirectUri = 'https://jklunder.github.io/beatster/callback';
       const scopes = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
-      window.location = \`https://accounts.spotify.com/authorize?client_id=\${clientId}&response_type=token&redirect_uri=\${redirectUri}&scope=\${encodeURIComponent(scopes)}\`;
+      window.location = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scopes)}`;
     }
 
     const video = document.getElementById('camera');
+    console.log("QR Scanner wordt geïnitialiseerd");
+    console.log("Camera element:", video);
+
     const scanner = new QrScanner(video, result => {
+      console.log("QR code gevonden:", result.data);
       const trackUri = result.data.replace('https://open.spotify.com/track/', 'spotify:track:').split('?')[0];
       playTrack(trackUri);
       scanner.stop();
     });
-    scanner.start();
+
+    scanner.start()
+      .then(() => console.log("QR scanner is gestart"))
+      .catch(e => console.error("Camera fout:", e));
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       accessToken = localStorage.getItem('access_token');
@@ -39,12 +46,18 @@
         getOAuthToken: cb => cb(accessToken),
         volume: 0.8
       });
-      player.addListener('ready', ({ device_id }) => { deviceId = device_id; });
+
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Spotify Player klaar met device ID', device_id);
+        deviceId = device_id;
+      });
+
       player.connect();
     };
 
     function playTrack(uri) {
-      fetch(\`https://api.spotify.com/v1/me/player/play?device_id=\${deviceId}\`, {
+      console.log("Track wordt afgespeeld:", uri);
+      fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         body: JSON.stringify({ uris: [uri] }),
         headers: {
@@ -52,10 +65,14 @@
           'Content-Type': 'application/json'
         }
       });
-      setTimeout(() => { player.pause(); }, 3000);
+      setTimeout(() => {
+        console.log("Pauze na 3 seconden");
+        player.pause();
+      }, 3000);
     }
 
     function resumePlayback() {
+      console.log("Doorgaan met afspelen");
       player.resume();
     }
   </script>
