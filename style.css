@@ -14,3 +14,12 @@ button {
   color: #000;
   cursor: pointer;
 }
+#log {
+  text-align: left;
+  background: #111;
+  padding: 10px;
+  max-width: 400px;
+  margin: auto;
+  border: 1px solid #333;
+  margin-bottom: 20px;
+}

@@ -6,12 +6,21 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Beatster - Test Mode</h1>
+  <h1>Beatster - Debug Mode</h1>
+  <div id="log"></div>
   <button onclick="playTestTrack()">▶️ Play test track</button>
   <button onclick="resumePlayback()">▶️ Resume</button>
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
+    function log(msg) {
+      console.log(msg);
+      const logDiv = document.getElementById("log");
+      const p = document.createElement("p");
+      p.textContent = msg;
+      logDiv.appendChild(p);
+    }
+
     let accessToken = '';
     let deviceId = '';
     let player;
@@ -32,21 +41,24 @@
       });
 
       player.addListener('ready', ({ device_id }) => {
-        console.log('Spotify Player klaar met device ID', device_id);
         deviceId = device_id;
+        log('✅ Spotify Player klaar: device ID = ' + deviceId);
       });
 
-      player.addListener('initialization_error', e => console.error(e));
-      player.addListener('authentication_error', e => console.error(e));
-      player.addListener('account_error', e => console.error(e));
-      player.addListener('playback_error', e => console.error(e));
+      player.addListener('initialization_error', e => log('❌ Init error: ' + e.message));
+      player.addListener('authentication_error', e => log('❌ Auth error: ' + e.message));
+      player.addListener('account_error', e => log('❌ Account error: ' + e.message));
+      player.addListener('playback_error', e => log('❌ Playback error: ' + e.message));
 
-      player.connect();
+      player.connect().then(success => {
+        if (success) log("✅ Web Playback SDK verbonden");
+        else log("❌ Web Playback SDK niet verbonden");
+      });
     };
 
     function playTestTrack() {
-      const testUri = 'spotify:track:5XVjNRubJUW0iPhhSWpLCj'; // Alice Deejay - Better Off Alone
-      console.log("TEST: Afspelen testtrack...");
+      const testUri = 'spotify:track:5XVjNRubJUW0iPhhSWpLCj'; // Better Off Alone
+      log("▶️ TEST: Probeer track af te spelen...");
       fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         body: JSON.stringify({ uris: [testUri] }),
@@ -54,16 +66,20 @@
           'Authorization': 'Bearer ' + accessToken,
           'Content-Type': 'application/json'
         }
-      }).then(() => {
-        setTimeout(() => {
-          console.log("TEST: Pauze na 3 seconden");
-          player.pause();
-        }, 3000);
-      }).catch(err => console.error("Play API fout:", err));
+      }).then(res => {
+        if (res.status === 204) {
+          log("✅ Spotify start track (204 No Content)");
+        } else {
+          res.text().then(t => log("⚠️ Spotify antwoord: " + t));
+        }
+      }).catch(err => log("❌ Play API fout: " + err));
+      setTimeout(() => {
+        player.pause().then(() => log("⏸️ Pauze na 3 seconden"));
+      }, 3000);
     }
 
     function resumePlayback() {
-      console.log("Doorgaan met afspelen");
+      log("▶️ Doorgaan met afspelen...");
       player.resume();
     }
   </script>
