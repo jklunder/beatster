@@ -1,93 +1,357 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <title>Beatster Debug</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beatster</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Beatster - Debug Mode</h1>
-  <div id="log"></div>
-  <button onclick="playTestTrack()">▶️ Play test track</button>
-  <button onclick="resumePlayback()">▶️ Resume</button>
+
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div id="screen-login" class="screen">
+    <h1>Beatster 🎵</h1>
+    <p>Log in met Spotify om te spelen.</p>
+    <button id="btn-login">Inloggen met Spotify</button>
+  </div>
+
+  <!-- ===================== SCAN SCREEN ===================== -->
+  <div id="screen-scan" class="screen" style="display:none">
+    <h1>Beatster</h1>
+    <p id="player-status">Spotify speler wordt geladen…</p>
+    <p>Scan een kaartje om een nummer te starten.</p>
+    <video id="qr-video" style="width:100%;max-width:400px;border-radius:8px"></video>
+    <p id="scan-result" style="font-size:0.85em;color:#aaa;word-break:break-all"></p>
+  </div>
+
+  <!-- ===================== PLAYING SCREEN ===================== -->
+  <div id="screen-playing" class="screen" style="display:none">
+    <h1>Beatster</h1>
+
+    <div id="status-bar">
+      <span id="playback-status">▶ Aan het spelen</span>
+    </div>
+
+    <!-- Countdown bar (first 3 seconds) -->
+    <div id="countdown-wrap" style="display:none">
+      <div id="countdown-bar-bg">
+        <div id="countdown-bar-fill"></div>
+      </div>
+      <p id="countdown-label">Auto-pauze over <span id="countdown-num">3</span>s — raad nu voor bonus!</p>
+    </div>
+
+    <!-- Bonus banner (after auto-pause) -->
+    <div id="bonus-banner" style="display:none">
+      <strong>⚡ Bonusronde!</strong>
+      <span>Raad je het nu? Dan krijg je extra punten.</span>
+    </div>
+
+    <!-- Controls: state A — playing during countdown -->
+    <div id="ctrl-countdown">
+      <button onclick="revealAndPause(true)">🔍 Onthullen (bonus +2)</button>
+      <button onclick="skipBonus()">⏭ Meer spelen</button>
+    </div>
+
+    <!-- Controls: state B — auto-paused, bonus window open -->
+    <div id="ctrl-paused" style="display:none">
+      <button onclick="resumePlayback()">▶ Doorgaan met luisteren</button>
+      <button onclick="revealAndPause(true)">🔍 Onthullen (bonus +2)</button>
+    </div>
+
+    <!-- Controls: state C — playing normally after skipping bonus -->
+    <div id="ctrl-playing" style="display:none">
+      <button onclick="revealAndPause(false)">🔍 Onthullen</button>
+    </div>
+
+    <!-- Controls: state D — revealed, awaiting score input -->
+    <div id="ctrl-revealed" style="display:none">
+      <p>Flip het kaartje om het antwoord te zien.</p>
+      <button onclick="awardPoints(true)" id="btn-correct">✅ Goed geraden!</button>
+      <button onclick="awardPoints(false)">❌ Fout geraden</button>
+    </div>
+
+    <!-- Controls: state E — next round -->
+    <div id="ctrl-next" style="display:none">
+      <p>Score: <strong id="score-display">0</strong> punt(en)</p>
+      <button onclick="nextRound()">➡ Volgende kaartje scannen</button>
+    </div>
+  </div>
 
   <script src="qr-scanner.min.js"></script>
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
-    function log(msg) {
-      console.log(msg);
-      const logDiv = document.getElementById("log");
-      const p = document.createElement("p");
-      p.textContent = msg;
-      logDiv.appendChild(p);
+
+    // ─── CONFIG ────────────────────────────────────────────────
+    const CLIENT_ID    = '309da8555b664edbb2a8966f772ebf14';
+    const REDIRECT_URI = 'https://jklunder.github.io/beatster/callback.html';
+    const SCOPES       = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
+
+    // ─── STATE ─────────────────────────────────────────────────
+    let accessToken  = null;
+    let deviceId     = null;
+    let player       = null;
+    let score        = 0;
+    let bonusOnReveal = false;
+    let countdownInterval = null;
+    let qrScanner    = null;
+
+    // ─── PKCE HELPERS ──────────────────────────────────────────
+    function randomString(length) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+      let result = '';
+      const arr = new Uint8Array(length);
+      crypto.getRandomValues(arr);
+      arr.forEach(b => result += chars[b % chars.length]);
+      return result;
     }
 
-    let accessToken = '';
-    let deviceId = '';
-    let player;
+    async function sha256(plain) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(plain);
+      return crypto.subtle.digest('SHA-256', data);
+    }
 
-    if (!localStorage.getItem('access_token')) {
-      const clientId = '309da8555b664edbb2a8966f772ebf14';
-      const redirectUri = 'https://jklunder.github.io/beatster/callback';
-      const scopes = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
-      const url = 'https://accounts.spotify.com/authorize' +
-        '?client_id=' + clientId +
-        '&response_type=token' +
-        '&redirect_uri=' + encodeURIComponent(redirectUri) +
-        '&scope=' + encodeURIComponent(scopes);
+    function base64urlEncode(buffer) {
+      return btoa(String.fromCharCode(...new Uint8Array(buffer)))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    async function startLogin() {
+      const verifier  = randomString(64);
+      const challenge = base64urlEncode(await sha256(verifier));
+
+      sessionStorage.setItem('pkce_verifier', verifier);
+
+      const url = 'https://accounts.spotify.com/authorize'
+        + '?client_id='     + CLIENT_ID
+        + '&response_type=code'
+        + '&redirect_uri='  + encodeURIComponent(REDIRECT_URI)
+        + '&scope='         + encodeURIComponent(SCOPES)
+        + '&code_challenge_method=S256'
+        + '&code_challenge=' + challenge;
+
       window.location = url;
     }
 
-    window.onSpotifyWebPlaybackSDKReady = () => {
+    // ─── INIT ──────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
       accessToken = localStorage.getItem('access_token');
-      player = new Spotify.Player({
-        name: 'Beatster Player',
-        getOAuthToken: cb => cb(accessToken),
-        volume: 0.8
+
+      if (!accessToken) {
+        // Show login screen
+        show('screen-login');
+        document.getElementById('btn-login').addEventListener('click', startLogin);
+      } else {
+        // Token present — go straight to scan screen and init SDK
+        show('screen-scan');
+        initSpotifySDK();
+        initQRScanner();
+      }
+    });
+
+    // ─── SPOTIFY WEB PLAYBACK SDK ──────────────────────────────
+    function initSpotifySDK() {
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        player = new Spotify.Player({
+          name: 'Beatster',
+          getOAuthToken: cb => {
+            // Always use the freshest token from storage
+            cb(localStorage.getItem('access_token'));
+          },
+          volume: 0.8
+        });
+
+        player.addListener('ready', ({ device_id }) => {
+          deviceId = device_id;
+          setStatus('✅ Klaar om te spelen');
+        });
+
+        player.addListener('not_ready', () => setStatus('⚠️ Speler niet beschikbaar'));
+        player.addListener('initialization_error', e => setStatus('❌ Init fout: ' + e.message));
+        player.addListener('authentication_error', e => {
+          setStatus('❌ Auth fout — opnieuw inloggen');
+          localStorage.removeItem('access_token');
+          setTimeout(() => location.reload(), 2000);
+        });
+        player.addListener('account_error', e => setStatus('❌ Geen Spotify Premium account'));
+
+        player.connect();
+      };
+    }
+
+    // ─── QR SCANNER ────────────────────────────────────────────
+    function initQRScanner() {
+      const video = document.getElementById('qr-video');
+      qrScanner = new QrScanner(video, result => handleQRResult(result.data || result), {
+        highlightScanRegion: true,
+        highlightCodeOutline: true,
       });
+      qrScanner.start();
+    }
 
-      player.addListener('ready', ({ device_id }) => {
-        deviceId = device_id;
-        log('✅ Spotify Player klaar: device ID = ' + deviceId);
-      });
+    function handleQRResult(raw) {
+      // Extract track ID from various Spotify URL formats:
+      // https://open.spotify.com/track/TRACK_ID
+      // https://open.spotify.com/track/TRACK_ID?si=...
+      // spotify:track:TRACK_ID
+      let trackId = null;
 
-      player.addListener('initialization_error', e => log('❌ Init error: ' + e.message));
-      player.addListener('authentication_error', e => log('❌ Auth error: ' + e.message));
-      player.addListener('account_error', e => log('❌ Account error: ' + e.message));
-      player.addListener('playback_error', e => log('❌ Playback error: ' + e.message));
+      const urlMatch = raw.match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/);
+      const uriMatch = raw.match(/spotify:track:([A-Za-z0-9]+)/);
 
-      player.connect().then(success => {
-        if (success) log("✅ Web Playback SDK verbonden");
-        else log("❌ Web Playback SDK niet verbonden");
-      });
-    };
+      if (urlMatch)      trackId = urlMatch[1];
+      else if (uriMatch) trackId = uriMatch[1];
 
-    function playTestTrack() {
-      const testUri = 'spotify:track:5XVjNRubJUW0iPhhSWpLCj';
-      log("▶️ TEST: Probeer track af te spelen...");
+      if (!trackId) {
+        document.getElementById('scan-result').textContent = 'Geen Spotify track herkend: ' + raw;
+        return;
+      }
+
+      document.getElementById('scan-result').textContent = 'Track gevonden: ' + trackId;
+      qrScanner.stop();
+      playTrack('spotify:track:' + trackId);
+    }
+
+    // ─── PLAYBACK ──────────────────────────────────────────────
+    function playTrack(uri) {
+      if (!deviceId) {
+        alert('Spotify speler nog niet klaar. Wacht even en probeer opnieuw.');
+        return;
+      }
+
       fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
-        body: JSON.stringify({ uris: [testUri] }),
+        body: JSON.stringify({ uris: [uri] }),
         headers: {
-          'Authorization': 'Bearer ' + accessToken,
+          'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
           'Content-Type': 'application/json'
         }
       }).then(res => {
         if (res.status === 204) {
-          log("✅ Spotify start track (204 No Content)");
+          showPlayingScreen();
+          startCountdown();
         } else {
-          res.text().then(t => log("⚠️ Spotify antwoord: " + t));
+          res.json().then(err => alert('Spotify fout: ' + JSON.stringify(err)));
         }
-      }).catch(err => log("❌ Play API fout: " + err));
-      setTimeout(() => {
-        player.pause().then(() => log("⏸️ Pauze na 3 seconden"));
-      }, 3000);
+      });
     }
 
     function resumePlayback() {
-      log("▶️ Doorgaan met afspelen...");
-      player.resume();
+      player.resume().then(() => {
+        bonusOnReveal = false;
+        hide('bonus-banner');
+        hide('ctrl-paused');
+        show('ctrl-playing');
+        setPlaybackStatus('▶ Aan het spelen');
+      });
     }
+
+    // ─── COUNTDOWN ─────────────────────────────────────────────
+    function startCountdown() {
+      const duration = 3000;
+      const start    = Date.now();
+      const fill     = document.getElementById('countdown-bar-fill');
+      const num      = document.getElementById('countdown-num');
+
+      show('countdown-wrap');
+      show('ctrl-countdown');
+      fill.style.width = '100%';
+
+      clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        const remaining = Math.max(0, duration - (Date.now() - start));
+        fill.style.width = (remaining / duration * 100) + '%';
+        num.textContent  = Math.ceil(remaining / 1000);
+
+        if (remaining <= 0) {
+          clearInterval(countdownInterval);
+          autoPause();
+        }
+      }, 50);
+    }
+
+    function autoPause() {
+      player.pause().then(() => {
+        bonusOnReveal = true;
+        hide('countdown-wrap');
+        hide('ctrl-countdown');
+        show('bonus-banner');
+        show('ctrl-paused');
+        setPlaybackStatus('⏸ Gepauzeerd');
+      });
+    }
+
+    function skipBonus() {
+      clearInterval(countdownInterval);
+      bonusOnReveal = false;
+      hide('countdown-wrap');
+      hide('ctrl-countdown');
+      show('ctrl-playing');
+    }
+
+    // ─── REVEAL ────────────────────────────────────────────────
+    function revealAndPause(withBonus) {
+      clearInterval(countdownInterval);
+      bonusOnReveal = withBonus && bonusOnReveal;
+
+      player.pause().then(() => {
+        hide('countdown-wrap');
+        hide('bonus-banner');
+        hide('ctrl-countdown');
+        hide('ctrl-paused');
+        hide('ctrl-playing');
+
+        // Update correct button label with bonus
+        document.getElementById('btn-correct').textContent =
+          bonusOnReveal ? '✅ Goed geraden! (+3 pt)' : '✅ Goed geraden! (+1 pt)';
+
+        show('ctrl-revealed');
+        setPlaybackStatus('⏸ Gepauzeerd — flip het kaartje!');
+      });
+    }
+
+    // ─── SCORING ───────────────────────────────────────────────
+    function awardPoints(correct) {
+      if (correct) score += bonusOnReveal ? 3 : 1;
+      document.getElementById('score-display').textContent = score;
+      hide('ctrl-revealed');
+      show('ctrl-next');
+      setPlaybackStatus('—');
+    }
+
+    function nextRound() {
+      hide('ctrl-next');
+      show('screen-scan');
+      hide('screen-playing');
+      document.getElementById('scan-result').textContent = '';
+      initQRScanner();
+    }
+
+    // ─── UI HELPERS ────────────────────────────────────────────
+    function show(id) { document.getElementById(id).style.display = ''; }
+    function hide(id) { document.getElementById(id).style.display = 'none'; }
+
+    function showPlayingScreen() {
+      hide('screen-scan');
+      // Reset all control states
+      ['ctrl-countdown','ctrl-paused','ctrl-playing','ctrl-revealed','ctrl-next'].forEach(hide);
+      hide('countdown-wrap');
+      hide('bonus-banner');
+      setPlaybackStatus('▶ Aan het spelen');
+      show('screen-playing');
+    }
+
+    function setStatus(msg) {
+      document.getElementById('player-status').textContent = msg;
+    }
+
+    function setPlaybackStatus(msg) {
+      document.getElementById('playback-status').textContent = msg;
+    }
+
   </script>
 </body>
 </html>
+apps-fileview.texmex_20260507.00_p2
+index.html
+Displaying index.html.
