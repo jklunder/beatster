@@ -20,7 +20,8 @@
     <h1>Beatster</h1>
     <p id="player-status">Spotify speler wordt geladen…</p>
     <p>Scan een kaartje om een nummer te starten.</p>
-    <video id="qr-video" style="width:100%;max-width:400px;border-radius:8px"></video>
+    <button id="btn-start-scan" onclick="startScanner()">📷 Camera starten</button>
+    <video id="qr-video" style="width:100%;max-width:400px;border-radius:8px;display:none"></video>
     <p id="scan-result" style="font-size:0.85em;color:#aaa;word-break:break-all"></p>
   </div>
 
@@ -140,12 +141,14 @@
       if (!accessToken) {
         // Show login screen
         show('screen-login');
+        hide('screen-scan');
         document.getElementById('btn-login').addEventListener('click', startLogin);
       } else {
         // Token present — go straight to scan screen and init SDK
+        hide('screen-login');
         show('screen-scan');
         initSpotifySDK();
-        initQRScanner();
+        // Scanner starts only when user taps the button (required for iOS Safari)
       }
     });
 
@@ -180,8 +183,17 @@
     }
 
     // ─── QR SCANNER ────────────────────────────────────────────
-    function initQRScanner() {
+    function startScanner() {
+      const btn   = document.getElementById('btn-start-scan');
       const video = document.getElementById('qr-video');
+      btn.style.display   = 'none';
+      video.style.display = '';
+
+      if (qrScanner) {
+        qrScanner.start();
+        return;
+      }
+
       qrScanner = new QrScanner(video, result => handleQRResult(result.data || result), {
         highlightScanRegion: true,
         highlightCodeOutline: true,
@@ -321,10 +333,12 @@
 
     function nextRound() {
       hide('ctrl-next');
-      show('screen-scan');
       hide('screen-playing');
+      show('screen-scan');
       document.getElementById('scan-result').textContent = '';
-      initQRScanner();
+      // Show the button again so user taps to restart camera (iOS requires this)
+      document.getElementById('btn-start-scan').style.display = '';
+      document.getElementById('qr-video').style.display = 'none';
     }
 
     // ─── UI HELPERS ────────────────────────────────────────────
@@ -353,5 +367,5 @@
 </body>
 </html>
 apps-fileview.texmex_20260507.00_p2
-index.html
-Displaying index.html.
+index (1).html
+Displaying index (1).html.
