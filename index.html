@@ -294,12 +294,7 @@
         return;
       }
 
-      if (res.status === 403) {
-        showError('❌ Spotify Premium vereist voor Web Playback.');
-        return;
-      }
-
-      showError('❌ Spotify fout: ' + errMsg);
+      showError('❌ Spotify fout ' + errMsg);
     }
 
     function resumePlayback() {
