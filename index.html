@@ -275,9 +275,17 @@
       // Try to read the error body
       let errMsg = `HTTP ${res.status}`;
       try {
-        const body = await res.json();
-        if (body.error) errMsg = `${body.error.status}: ${body.error.message}`;
-        console.error('[Beatster] Spotify error body:', body);
+        const text = await res.text();
+        console.error('[Beatster] Spotify error raw:', res.status, text);
+        if (text) {
+          try {
+            const body = JSON.parse(text);
+            if (body.error) errMsg = `${body.error.status}: ${body.error.message}`;
+            else errMsg = `HTTP ${res.status}: ${text}`;
+          } catch (_) {
+            errMsg = `HTTP ${res.status}: ${text}`;
+          }
+        }
       } catch (_) {}
 
       // Retry on "Device not found" or server errors
