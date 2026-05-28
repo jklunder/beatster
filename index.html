@@ -570,6 +570,28 @@
 
   </div>
 
+  <!-- READY -->
+  <div id="screen-ready" class="screen" style="display:none">
+
+    <div class="round-tag">
+      <span id="ready-mode-badge" class="mode-badge">Normaal</span>
+      <span style="margin:0 6px">·</span>
+      <span id="ready-player-name" style="color:var(--text);font-weight:500"></span>
+      <span style="margin:0 6px">·</span>
+      <span>Kaartje</span>
+      <strong id="ready-round-display" style="color:var(--text);margin-left:4px">1</strong>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:32px 0;text-align:center">
+      <div style="font-size:48px">✅</div>
+      <div style="font-size:22px;font-weight:600">Track herkend!</div>
+      <div style="font-size:14px;color:var(--muted)">Klaar om te luisteren?<br>Druk op de knop als iedereen er klaar voor is.</div>
+    </div>
+
+    <button class="btn-primary" onclick="startListening()">▶ Luisteren starten</button>
+
+  </div>
+
   <!-- GAME -->
   <div id="screen-game" class="screen" style="display:none">
 
@@ -725,6 +747,8 @@
   let mode             = 'normaal';
   let round            = 1;
   let isPlaying        = true;
+  let pendingGameStart = false;
+  let pendingUri       = null;
 
   let players          = [];   // [{name, tokens, score, timelineEmpty}]
   let currentPlayerIdx = 0;
@@ -783,6 +807,12 @@
       setTimeout(() => location.reload(), 2000);
     });
     player.addListener('account_error', () => setStatus('Geen Spotify Premium account'));
+    player.addListener('player_state_changed', state => {
+      if (pendingGameStart && state && !state.paused) {
+        pendingGameStart = false;
+        showGameScreen();
+      }
+    });
     player.connect();
   };
 
@@ -926,11 +956,25 @@
       return;
     }
 
-    showScanMsg('Track gevonden — laden…', false);
     qrScanner.stop();
+    pendingUri = 'spotify:track:' + trackId;
 
     fetchTrack(trackId).then(t => { currentTrack = t; });
-    playTrack('spotify:track:' + trackId);
+
+    const p = players[currentPlayerIdx];
+    document.getElementById('ready-mode-badge').textContent   = mode === 'extra' ? 'Extra' : 'Normaal';
+    document.getElementById('ready-player-name').textContent  = p ? p.name : '';
+    document.getElementById('ready-round-display').textContent = round;
+
+    hide('screen-scan');
+    show('screen-ready');
+  }
+
+  function startListening() {
+    const btn = document.querySelector('#screen-ready .btn-primary');
+    btn.textContent = 'Laden…';
+    btn.disabled = true;
+    playTrack(pendingUri);
   }
 
   // ─── PLAYBACK ───────────────────────────────────────────────
@@ -958,7 +1002,7 @@
       return;
     }
 
-    if (res.status === 204) { showGameScreen(); return; }
+    if (res.status === 204) { pendingGameStart = true; showScanMsg('Laden…', false); return; }
 
     let errMsg = `HTTP ${res.status}`;
     try {
@@ -981,12 +1025,16 @@
       return;
     }
 
-    showScanMsg('Spotify fout: ' + errMsg, true);
+    pendingGameStart = false;
+    const readyBtn = document.querySelector('#screen-ready .btn-primary');
+    if (readyBtn) { readyBtn.textContent = '▶ Luisteren starten'; readyBtn.disabled = false; }
+    alert('Spotify fout: ' + errMsg);
   }
 
   // ─── GAME SCREEN ────────────────────────────────────────────
   function showGameScreen() {
     hide('screen-scan');
+    hide('screen-ready');
 
     isPlaying    = true;
     bonusClaimed = false;
