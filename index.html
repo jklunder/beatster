@@ -1110,7 +1110,7 @@
     qrScanner.start();
   }
 
-  async function handleQRResult(raw) {
+  function handleQRResult(raw) {
     let trackId = null;
 
     const urlMatch = raw.match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/);
@@ -1127,7 +1127,8 @@
     showScanResult('Track gevonden — laden…', false);
     qrScanner.stop();
 
-    currentTrack = await fetchTrack(trackId);
+    // Fetch metadata in parallel so it doesn't delay the play command
+    fetchTrack(trackId).then(track => { currentTrack = track; });
     playTrack('spotify:track:' + trackId);
   }
 
