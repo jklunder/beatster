@@ -513,7 +513,7 @@
       </div>
 
       <button class="btn-secondary" id="toggle-btn" onclick="togglePlay()">⏸ Pauzeer</button>
-      <button class="btn-green" onclick="continueToPlacing()">▶ Doorgaan</button>
+      <button class="btn-green" onclick="continueToPlacing()">Doorgaan →</button>
 
     </div>
 
@@ -862,7 +862,7 @@
           isPlaying = false;
           document.getElementById('status-dot').className        = 'status-dot paused';
           document.getElementById('playback-status').textContent = 'Gepauzeerd';
-          document.getElementById('toggle-btn').textContent      = '▶ Doorgaan';
+          document.getElementById('toggle-btn').textContent      = '▶ Verder luisteren';
           setWaveformActive(false);
         });
       }
@@ -879,7 +879,7 @@
         isPlaying = false;
         document.getElementById('status-dot').className        = 'status-dot paused';
         document.getElementById('playback-status').textContent = 'Gepauzeerd';
-        document.getElementById('toggle-btn').textContent      = '▶ Doorgaan';
+        document.getElementById('toggle-btn').textContent      = '▶ Verder luisteren';
         setWaveformActive(false);
       });
     } else {
