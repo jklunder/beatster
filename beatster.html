@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Beatster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --border: rgba(255,255,255,0.07);
+    --accent: #f0e040;
+    --accent2: #ff4d6d;
+    --text: #f0ede8;
+    --muted: #6b6a72;
+    --green: #1DB954;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    width: 100%;
+    max-width: 480px;
+    padding: 28px 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: var(--accent);
+  }
+
+  .spotify-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--green);
+    background: rgba(29,185,84,0.1);
+    border: 1px solid rgba(29,185,84,0.25);
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
+
+  .spotify-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ---- MAIN ---- */
+  main {
+    width: 100%;
+    max-width: 480px;
+    padding: 24px;
+    flex: 1;
+  }
+
+  /* ---- SCREEN SYSTEM ---- */
+  .screen { display: none; }
+  .screen.active { display: flex; flex-direction: column; gap: 16px; }
+
+  /* ---- SCAN SCREEN ---- */
+  .scan-area {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scan-frame {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scan-frame::before, .scan-frame::after,
+  .scan-frame .corner-tl, .scan-frame .corner-br {
+    content: '';
+    position: absolute;
+    width: 28px; height: 28px;
+    border-color: var(--accent);
+    border-style: solid;
+  }
+  .scan-frame::before { top: 0; left: 0; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+  .scan-frame::after  { top: 0; right: 0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+  .scan-frame .corner-tl { bottom: 0; left: 0; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+  .scan-frame .corner-br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+  .scan-line {
+    position: absolute;
+    left: 10px; right: 10px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    top: 10px;
+    animation: scanline 2s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  @keyframes scanline {
+    0%   { top: 10px; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { top: 180px; opacity: 0; }
+  }
+
+  .scan-icon {
+    font-size: 48px;
+    opacity: 0.2;
+  }
+
+  .scan-hint {
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .btn-demo {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .btn-demo:hover { opacity: 0.9; }
+  .btn-demo:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.2); background: var(--surface2); }
+
+  /* ---- LOADING SCREEN ---- */
+  .loading-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .spinner {
+    width: 40px; height: 40px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---- PLAYING SCREEN ---- */
+  .track-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .track-card::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px; right: -60px;
+    height: 200px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(240,224,64,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .album-art {
+    width: 140px; height: 140px;
+    border-radius: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .album-art.playing::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(240,224,64,0.06);
+    animation: albumPulse 1s ease-in-out infinite;
+  }
+  @keyframes albumPulse {
+    0%,100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+
+  .track-status {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+  .status-dot.paused { background: var(--accent2); animation: none; }
+  .status-dot.playing { animation: pulse 1s ease-in-out infinite; }
+
+  .track-info-hidden {
+    text-align: center;
+  }
+  .track-info-hidden .hidden-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .track-info-hidden .hidden-blocks {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hidden-block {
+    height: 12px;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+
+  /* Track info revealed */
+  .track-info-revealed {
+    text-align: center;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .track-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 1px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .track-artist {
+    font-size: 15px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .track-year {
+    display: inline-block;
+    margin-top: 10px;
+    background: var(--accent);
+    color: #0d0d0f;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    padding: 2px 14px;
+    border-radius: 6px;
+  }
+
+  /* ---- COUNTDOWN ---- */
+  .countdown-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .countdown-bar-bg {
+    width: 100%;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .countdown-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 6px var(--accent);
+  }
+
+  .countdown-label {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .countdown-label span {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ---- BONUS BANNER ---- */
+  .bonus-banner {
+    background: linear-gradient(135deg, rgba(240,224,64,0.12), rgba(240,224,64,0.04));
+    border: 1px solid rgba(240,224,64,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    animation: fadeUp 0.3s ease forwards;
+  }
+  .bonus-text {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .bonus-text strong {
+    color: var(--accent);
+    display: block;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .bonus-pts {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* ---- CONTROLS ---- */
+  .controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-play {
+    width: 100%;
+    padding: 16px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-play:hover { opacity: 0.9; }
+  .btn-play:active { transform: scale(0.98); }
+
+  .btn-reveal {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent2);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .btn-reveal:hover { opacity: 0.9; }
+  .btn-reveal:active { transform: scale(0.98); }
+
+  .btn-next {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .btn-next:hover { border-color: rgba(255,255,255,0.2); background: var(--surface2); }
+
+  /* ---- SCORE BAR ---- */
+  .score-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .score-item { text-align: center; }
+  .score-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    line-height: 1;
+  }
+  .score-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .score-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ---- ROUND TAG ---- */
+  .round-tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ---- SCANNED URL tag ---- */
+  .scanned-url {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: monospace;
+    word-break: break-all;
+    text-align: center;
+  }
+
+  /* ---- WAVEFORM (decorative) ---- */
+  .waveform {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 24px;
+  }
+  .wave-bar {
+    width: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+  .wave-bar.active {
+    animation: waveAnim var(--spd) ease-in-out infinite alternate;
+  }
+  @keyframes waveAnim {
+    from { transform: scaleY(0.2); }
+    to   { transform: scaleY(1); }
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    padding: 20px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">BEATSTER</div>
+  <div class="spotify-badge">
+    <div class="spotify-dot"></div>
+    Spotify verbonden
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ SCAN SCREEN ============ -->
+  <div class="screen active" id="screen-scan">
+    <div class="round-tag">
+      <span>Ronde</span>
+      <strong id="round-display" style="color:var(--text)">1</strong>
+      <span>van 10</span>
+    </div>
+
+    <div class="scan-area">
+      <div class="scan-frame">
+        <div class="corner-tl"></div>
+        <div class="corner-br"></div>
+        <div class="scan-line"></div>
+        <div class="scan-icon">⬛</div>
+      </div>
+      <p class="scan-hint">Houd de QR-code van een kaartje<br>voor de camera</p>
+    </div>
+
+    <button class="btn-demo" onclick="simulateScan()">
+      ▶ Simuleer QR-scan (demo)
+    </button>
+    <button class="btn-secondary" onclick="manualTrack()">
+      Voer track-ID handmatig in
+    </button>
+  </div>
+
+  <!-- ============ LOADING SCREEN ============ -->
+  <div class="screen" id="screen-loading">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <div>
+        <p style="font-size:15px;font-weight:500;margin-bottom:4px">Track laden…</p>
+        <p class="scanned-url" id="loading-url">open.spotify.com/track/…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PLAYING SCREEN ============ -->
+  <div class="screen" id="screen-playing">
+
+    <div class="score-bar">
+      <div class="score-item">
+        <div class="score-num" id="score-total">0</div>
+        <div class="score-lbl">Punten</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <div class="score-num" id="score-round-display">1</div>
+        <div class="score-lbl">Ronde</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <div class="score-num" id="score-streak">0</div>
+        <div class="score-lbl">Streak</div>
+      </div>
+    </div>
+
+    <div class="track-card" id="track-card">
+      <div class="track-status">
+        <div class="status-dot playing" id="status-dot"></div>
+        <span id="status-text">Aan het spelen</span>
+      </div>
+
+      <div class="album-art playing" id="album-art">🎵</div>
+
+      <!-- Waveform -->
+      <div class="waveform" id="waveform"></div>
+
+      <!-- Hidden info -->
+      <div class="track-info-hidden" id="info-hidden">
+        <p class="hidden-label">Raad de artiest en het jaar</p>
+        <div class="hidden-blocks">
+          <div class="hidden-block" style="width:90px"></div>
+          <div class="hidden-block" style="width:55px"></div>
+        </div>
+        <div class="hidden-blocks" style="margin-top:6px">
+          <div class="hidden-block" style="width:40px"></div>
+        </div>
+      </div>
+
+      <!-- Revealed info (hidden until reveal) -->
+      <div class="track-info-revealed" id="info-revealed" style="display:none">
+        <div class="track-title" id="reveal-title">—</div>
+        <div class="track-artist" id="reveal-artist">—</div>
+        <div class="track-year" id="reveal-year">—</div>
+      </div>
+    </div>
+
+    <!-- Countdown bar (shown during 3s bonus window) -->
+    <div class="countdown-wrap" id="countdown-wrap" style="display:none">
+      <div class="countdown-bar-bg">
+        <div class="countdown-bar-fill" id="countdown-fill" style="width:100%"></div>
+      </div>
+      <p class="countdown-label">Auto-pauze over <span id="countdown-num">3</span>s</p>
+    </div>
+
+    <!-- Bonus banner (shown after auto-pause) -->
+    <div class="bonus-banner" id="bonus-banner" style="display:none">
+      <div class="bonus-text">
+        <strong>⚡ Bonusronde!</strong>
+        Raad je het nu? Dan krijg je extra punten.
+      </div>
+      <div class="bonus-pts">+2</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls" id="controls">
+      <!-- State A: playing with countdown -->
+      <div id="ctrl-playing">
+        <button class="btn-reveal" onclick="revealTrack(true)">
+          Onthullen (bonus: +2 pt)
+        </button>
+        <button class="btn-secondary" style="margin-top:10px" onclick="skipBonus()">
+          Meer spelen →
+        </button>
+      </div>
+
+      <!-- State A2: auto-paused, bonus window open -->
+      <div id="ctrl-paused" style="display:none">
+        <button class="btn-play" onclick="resumePlayback()">
+          ▶ Doorgaan met luisteren
+        </button>
+        <button class="btn-reveal" style="margin-top:10px" onclick="revealTrack(true)">
+          Onthullen (bonus: +2 pt)
+        </button>
+      </div>
+
+      <!-- State B: playing normally (after skipping bonus) -->
+      <div id="ctrl-playing-normal" style="display:none">
+        <button class="btn-reveal" onclick="revealTrack(false)">
+          Onthullen
+        </button>
+      </div>
+
+      <!-- State C: revealed -->
+      <div id="ctrl-revealed" style="display:none">
+        <button class="btn-play" onclick="awardPoints(true)">
+          ✓ Goed geraden! (+1 pt)
+        </button>
+        <button class="btn-secondary" style="margin-top:10px" onclick="awardPoints(false)">
+          ✗ Fout geraden
+        </button>
+      </div>
+
+      <!-- State D: points awarded, next -->
+      <div id="ctrl-next" style="display:none">
+        <button class="btn-demo" onclick="nextRound()">
+          Volgende kaartje →
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>Beatster · Spotify Premium vereist</footer>
+
+<script>
+  // ---- DEMO DATA ----
+  const demoTracks = [
+    { url: 'open.spotify.com/track/5XVjNRubJUW0iPhhSWpLCj', title: 'Blue (Da Ba Dee)', artist: 'Eiffel 65', year: '1998', emoji: '🔵' },
+    { url: 'open.spotify.com/track/3n3PyH6SInRlFAiDwnAFaQ', title: 'Sandstorm', artist: 'Darude', year: '1999', emoji: '🏜️' },
+    { url: 'open.spotify.com/track/1HNkqx9Ahdgi1Ixy2xkKkL', title: 'Levels', artist: 'Avicii', year: '2011', emoji: '🎚️' },
+    { url: 'open.spotify.com/track/0e7ipj03S05BNilyu5bRzt', title: 'rockstar', artist: 'Post Malone', year: '2017', emoji: '⭐' },
+    { url: 'open.spotify.com/track/7qiZfU4dY1lWllzX7mPBI3', title: 'Shape of You', artist: 'Ed Sheeran', year: '2017', emoji: '🎶' },
+  ];
+
+  // ---- STATE ----
+  let state = {
+    round: 1,
+    score: 0,
+    streak: 0,
+    currentTrack: null,
+    bonusActive: false,
+    revealed: false,
+    countdownTimer: null,
+    countdownInterval: null,
+  };
+
+  // ---- WAVEFORM INIT ----
+  function buildWaveform() {
+    const wf = document.getElementById('waveform');
+    wf.innerHTML = '';
+    const heights = [8,14,20,16,10,18,22,12,8,16,20,14,10,18,12];
+    const speeds = ['0.4s','0.6s','0.5s','0.7s','0.45s','0.55s','0.65s','0.5s','0.4s','0.6s','0.5s','0.7s','0.45s','0.55s','0.65s'];
+    heights.forEach((h,i) => {
+      const b = document.createElement('div');
+      b.className = 'wave-bar';
+      b.style.height = h+'px';
+      b.style.setProperty('--spd', speeds[i]);
+      wf.appendChild(b);
+    });
+  }
+
+  function setWaveformActive(on) {
+    document.querySelectorAll('.wave-bar').forEach(b => {
+      if (on) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+  }
+
+  // ---- NAVIGATION ----
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function simulateScan() {
+    const track = demoTracks[(state.round - 1) % demoTracks.length];
+    document.getElementById('loading-url').textContent = track.url;
+    showScreen('screen-loading');
+    setTimeout(() => loadTrack(track), 1200);
+  }
+
+  function manualTrack() {
+    simulateScan();
+  }
+
+  function loadTrack(track) {
+    state.currentTrack = track;
+    state.bonusActive = false;
+    state.revealed = false;
+
+    // Reset UI
+    document.getElementById('album-art').textContent = track.emoji;
+    document.getElementById('album-art').classList.add('playing');
+    document.getElementById('status-dot').className = 'status-dot playing';
+    document.getElementById('status-text').textContent = 'Aan het spelen';
+    document.getElementById('info-hidden').style.display = 'block';
+    document.getElementById('info-revealed').style.display = 'none';
+    document.getElementById('countdown-wrap').style.display = 'flex';
+    document.getElementById('bonus-banner').style.display = 'none';
+    document.getElementById('ctrl-playing').style.display = 'block';
+    document.getElementById('ctrl-paused').style.display = 'none';
+    document.getElementById('ctrl-playing-normal').style.display = 'none';
+    document.getElementById('ctrl-revealed').style.display = 'none';
+    document.getElementById('ctrl-next').style.display = 'none';
+    document.getElementById('score-round-display').textContent = state.round;
+
+    buildWaveform();
+    setWaveformActive(true);
+    showScreen('screen-playing');
+    startCountdown();
+  }
+
+  // ---- COUNTDOWN ----
+  function startCountdown() {
+    state.bonusActive = true;
+    const fill = document.getElementById('countdown-fill');
+    const num = document.getElementById('countdown-num');
+    const duration = 3000;
+    const start = Date.now();
+
+    fill.style.width = '100%';
+    num.textContent = '3';
+
+    clearTimeout(state.countdownTimer);
+    clearInterval(state.countdownInterval);
+
+    state.countdownInterval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const remaining = Math.max(0, duration - elapsed);
+      const pct = (remaining / duration) * 100;
+      fill.style.width = pct + '%';
+      num.textContent = Math.ceil(remaining / 1000);
+
+      if (remaining <= 0) {
+        clearInterval(state.countdownInterval);
+        autoPause();
+      }
+    }, 50);
+  }
+
+  function autoPause() {
+    state.bonusActive = true;
+    document.getElementById('countdown-wrap').style.display = 'none';
+    document.getElementById('bonus-banner').style.display = 'flex';
+    document.getElementById('ctrl-playing').style.display = 'none';
+    document.getElementById('ctrl-paused').style.display = 'block';
+    document.getElementById('album-art').classList.remove('playing');
+    document.getElementById('status-dot').className = 'status-dot paused';
+    document.getElementById('status-text').textContent = 'Gepauzeerd';
+    setWaveformActive(false);
+    // In real app: player.pause()
+  }
+
+  function resumePlayback() {
+    state.bonusActive = false;
+    document.getElementById('bonus-banner').style.display = 'none';
+    document.getElementById('ctrl-paused').style.display = 'none';
+    document.getElementById('ctrl-playing-normal').style.display = 'block';
+    document.getElementById('album-art').classList.add('playing');
+    document.getElementById('status-dot').className = 'status-dot playing';
+    document.getElementById('status-text').textContent = 'Aan het spelen';
+    setWaveformActive(true);
+    // In real app: player.resume()
+  }
+
+  function skipBonus() {
+    clearInterval(state.countdownInterval);
+    state.bonusActive = false;
+    document.getElementById('countdown-wrap').style.display = 'none';
+    document.getElementById('bonus-banner').style.display = 'none';
+    document.getElementById('ctrl-playing').style.display = 'none';
+    document.getElementById('ctrl-playing-normal').style.display = 'block';
+  }
+
+  // ---- REVEAL ----
+  function revealTrack(withBonus) {
+    clearInterval(state.countdownInterval);
+    state.revealed = true;
+    const t = state.currentTrack;
+
+    document.getElementById('reveal-title').textContent = t.title;
+    document.getElementById('reveal-artist').textContent = t.artist;
+    document.getElementById('reveal-year').textContent = t.year;
+    document.getElementById('info-hidden').style.display = 'none';
+    document.getElementById('info-revealed').style.display = 'block';
+    document.getElementById('countdown-wrap').style.display = 'none';
+    document.getElementById('bonus-banner').style.display = 'none';
+    document.getElementById('ctrl-playing').style.display = 'none';
+    document.getElementById('ctrl-playing-normal').style.display = 'none';
+
+    // Store whether bonus was active
+    state._bonusOnReveal = withBonus && state.bonusActive;
+
+    // Update button labels
+    const bonusPts = state._bonusOnReveal ? 3 : 1;
+    document.querySelector('#ctrl-revealed .btn-play').textContent =
+      state._bonusOnReveal ? `✓ Goed geraden! (+${bonusPts} pt, bonus!)` : `✓ Goed geraden! (+${bonusPts} pt)`;
+
+    document.getElementById('ctrl-revealed').style.display = 'flex';
+    document.getElementById('ctrl-revealed').style.flexDirection = 'column';
+    document.getElementById('ctrl-revealed').style.gap = '10px';
+  }
+
+  // ---- SCORING ----
+  function awardPoints(correct) {
+    if (correct) {
+      const pts = state._bonusOnReveal ? 3 : 1;
+      state.score += pts;
+      state.streak += 1;
+    } else {
+      state.streak = 0;
+    }
+    document.getElementById('score-total').textContent = state.score;
+    document.getElementById('score-streak').textContent = state.streak;
+    document.getElementById('ctrl-revealed').style.display = 'none';
+    document.getElementById('ctrl-next').style.display = 'block';
+  }
+
+  // ---- NEXT ROUND ----
+  function nextRound() {
+    state.round += 1;
+    document.getElementById('round-display').textContent = state.round;
+    showScreen('screen-scan');
+  }
+
+  // ---- INIT ----
+  buildWaveform();
+</script>
+</body>
+</html>
