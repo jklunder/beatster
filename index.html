@@ -12,7 +12,7 @@
       --surface: #16161a;
       --surface2: #1e1e24;
       --border: rgba(255,255,255,0.07);
-      --accent: #f0e040;
+      --accent: #ff2d6e;
       --accent2: #ff4d6d;
       --text: #f0ede8;
       --muted: #6b6a72;
@@ -54,11 +54,10 @@
       justify-content: space-between;
     }
 
-    .logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      letter-spacing: 3px;
-      color: var(--accent);
+    .logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
     }
 
     .spotify-badge {
@@ -349,7 +348,7 @@
       position: absolute;
       top: -60px; left: -60px; right: -60px;
       height: 200px;
-      background: radial-gradient(ellipse at 50% 0%, rgba(240,224,64,0.08) 0%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,45,110,0.08) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -370,7 +369,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(240,224,64,0.06);
+      background: rgba(255,45,110,0.06);
       animation: albumPulse 1s ease-in-out infinite;
     }
     @keyframes albumPulse {
@@ -470,8 +469,8 @@
 
     /* ---- BONUS BANNER ---- */
     .bonus-banner {
-      background: linear-gradient(135deg, rgba(240,224,64,0.12), rgba(240,224,64,0.04));
-      border: 1px solid rgba(240,224,64,0.3);
+      background: linear-gradient(135deg, rgba(255,45,110,0.12), rgba(255,45,110,0.04));
+      border: 1px solid rgba(255,45,110,0.3);
       border-radius: 10px;
       padding: 12px 16px;
       display: flex;
@@ -580,7 +579,7 @@
 </div>
 
 <header>
-  <div class="logo">BEATSTER</div>
+  <img src="beatster.png" alt="Beatster" class="logo-img" />
   <div class="spotify-badge" id="spotify-badge" style="display:none">
     <div class="spotify-dot"></div>
     <span id="spotify-badge-text">Spotify verbonden</span>
