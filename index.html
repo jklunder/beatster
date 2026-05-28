@@ -55,7 +55,7 @@
     }
 
     .logo-img {
-      height: 36px;
+      height: 48px;
       width: auto;
       object-fit: contain;
     }
@@ -106,8 +106,6 @@
     }
 
     /* ---- SCREEN SYSTEM ---- */
-    /* Screens are hidden/shown via JS (style.display).
-       The flex layout below applies when JS clears the inline style. */
     .screen {
       display: flex;
       flex-direction: column;
@@ -143,6 +141,86 @@
       font-size: 14px;
       color: var(--muted);
       line-height: 1.5;
+    }
+
+    /* ---- DIFFICULTY SCREEN ---- */
+    .screen-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .diff-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .diff-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .diff-card:hover {
+      border-color: rgba(255,255,255,0.18);
+      background: var(--surface2);
+    }
+
+    .diff-card.selected {
+      border-color: var(--accent);
+      background: rgba(255,45,110,0.06);
+    }
+
+    .diff-icon {
+      font-size: 26px;
+      width: 40px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .diff-info { flex: 1; }
+
+    .diff-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 1.5px;
+    }
+
+    .diff-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .diff-pts { text-align: right; flex-shrink: 0; }
+
+    .diff-pts-row {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .diff-pts-row strong { color: var(--text); }
+
+    .diff-badge {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 10px;
+      background: rgba(255,45,110,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(255,45,110,0.25);
     }
 
     /* ---- SCAN SCREEN ---- */
@@ -437,14 +515,34 @@
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .track-info-revealed p {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
+
+    .track-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
     }
-    .track-info-revealed strong {
+
+    .track-meta-artist {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .track-meta-title {
+      font-size: 18px;
+      font-weight: 500;
       color: var(--text);
-      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .track-meta-year {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: var(--accent);
+      letter-spacing: 3px;
+      margin-top: 4px;
     }
 
     /* ---- COUNTDOWN ---- */
@@ -614,12 +712,62 @@
     </div>
   </div>
 
+  <!-- ===================== DIFFICULTY SCREEN ===================== -->
+  <div id="screen-difficulty" class="screen" style="display:none">
+
+    <p class="screen-title">Kies je niveau</p>
+
+    <div class="diff-grid">
+
+      <div class="diff-card selected" id="diff-normaal" onclick="selectDifficulty('normaal')">
+        <div class="diff-icon">🎵</div>
+        <div class="diff-info">
+          <div class="diff-name">Normaal</div>
+          <div class="diff-hint">Raad het decennium</div>
+        </div>
+        <div class="diff-pts">
+          <div class="diff-pts-row">Correct: <strong>+1 pt</strong></div>
+          <div class="diff-pts-row">Bonus: <strong>+3 pt</strong></div>
+        </div>
+      </div>
+
+      <div class="diff-card" id="diff-pro" onclick="selectDifficulty('pro')">
+        <div class="diff-icon">🔥</div>
+        <div class="diff-info">
+          <div class="diff-name">Pro</div>
+          <div class="diff-hint">Raad artiest & songtitel</div>
+        </div>
+        <div class="diff-pts">
+          <div class="diff-pts-row">Correct: <strong>+2 pt</strong></div>
+          <div class="diff-pts-row">Bonus: <strong>+4 pt</strong></div>
+        </div>
+      </div>
+
+      <div class="diff-card" id="diff-expert" onclick="selectDifficulty('expert')">
+        <div class="diff-icon">💀</div>
+        <div class="diff-info">
+          <div class="diff-name">Expert</div>
+          <div class="diff-hint">Raad artiest, titel & jaar</div>
+        </div>
+        <div class="diff-pts">
+          <div class="diff-pts-row">Correct: <strong>+3 pt</strong></div>
+          <div class="diff-pts-row">Bonus: <strong>+5 pt</strong></div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-primary" onclick="startGame()">Spel starten →</button>
+
+  </div>
+
   <!-- ===================== SCAN SCREEN ===================== -->
   <div id="screen-scan" class="screen" style="display:none">
 
     <div class="round-tag">
       <span>Ronde</span>
       <strong id="round-display" style="color:var(--text)">1</strong>
+      <span id="scan-diff-badge" class="diff-badge" style="margin-left:4px">Normaal</span>
     </div>
 
     <p id="player-status"></p>
@@ -644,6 +792,10 @@
 
   <!-- ===================== PLAYING SCREEN ===================== -->
   <div id="screen-playing" class="screen" style="display:none">
+
+    <div style="display:flex;justify-content:flex-end">
+      <span class="diff-badge" id="playing-diff-badge">Normaal</span>
+    </div>
 
     <div class="score-bar">
       <div class="score-item">
@@ -674,7 +826,7 @@
 
       <!-- Hidden info (shown while playing) -->
       <div class="track-info-hidden" id="info-hidden">
-        <p class="hidden-label">Raad de artiest en het jaar</p>
+        <p class="hidden-label" id="hint-label">Raad het decennium</p>
         <div class="hidden-blocks">
           <div class="hidden-block" style="width:90px"></div>
           <div class="hidden-block" style="width:55px"></div>
@@ -686,7 +838,11 @@
 
       <!-- Revealed info (shown after reveal) -->
       <div class="track-info-revealed" id="info-revealed" style="display:none">
-        <p>Flip het kaartje om<br><strong>het antwoord te zien!</strong></p>
+        <div class="track-meta">
+          <div class="track-meta-artist" id="meta-artist"></div>
+          <div class="track-meta-title" id="meta-title"></div>
+          <div class="track-meta-year" id="meta-year"></div>
+        </div>
       </div>
     </div>
 
@@ -704,7 +860,7 @@
         <strong>⚡ Bonusronde!</strong>
         Raad je het nu? Dan krijg je extra punten.
       </div>
-      <div class="bonus-pts">+2</div>
+      <div class="bonus-pts" id="bonus-pts-display">+3</div>
     </div>
 
     <!-- Controls -->
@@ -712,14 +868,14 @@
 
       <!-- State A: playing during countdown -->
       <div id="ctrl-countdown">
-        <button class="btn-reveal" onclick="revealAndPause(true)">Onthullen (bonus: +2 pt)</button>
+        <button class="btn-reveal" id="btn-reveal-countdown" onclick="revealAndPause(true)">Onthullen (bonus: +3 pt)</button>
         <button class="btn-secondary" style="margin-top:10px" onclick="skipBonus()">Meer spelen →</button>
       </div>
 
       <!-- State B: auto-paused, bonus window open -->
       <div id="ctrl-paused" style="display:none">
         <button class="btn-play" onclick="resumePlayback()">▶ Doorgaan met luisteren</button>
-        <button class="btn-reveal" style="margin-top:10px" onclick="revealAndPause(true)">Onthullen (bonus: +2 pt)</button>
+        <button class="btn-reveal" style="margin-top:10px" id="btn-reveal-paused" onclick="revealAndPause(true)">Onthullen (bonus: +3 pt)</button>
       </div>
 
       <!-- State C: playing normally after skipping bonus -->
@@ -744,7 +900,7 @@
 
 </main>
 
-<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.1.1</span></footer>
+<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.1.2</span></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.umd.min.js"></script>
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
@@ -754,6 +910,12 @@
   const CLIENT_ID    = '6706ea226f8f48939311fae46386f74b';
   const REDIRECT_URI = 'https://jklunder.github.io/beatster/callback.html';
   const SCOPES       = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
+
+  const DIFFICULTY = {
+    normaal: { label: 'Normaal', hint: 'Raad het decennium',        basePoints: 1, bonusPoints: 3 },
+    pro:     { label: 'Pro',     hint: 'Raad artiest & songtitel',  basePoints: 2, bonusPoints: 4 },
+    expert:  { label: 'Expert',  hint: 'Raad artiest, titel & jaar', basePoints: 3, bonusPoints: 5 },
+  };
 
   // ─── STATE ─────────────────────────────────────────────────
   let accessToken   = localStorage.getItem('access_token');
@@ -766,6 +928,8 @@
   let bonusOnReveal = false;
   let countdownInterval = null;
   let qrScanner     = null;
+  let difficulty    = 'normaal';
+  let currentTrack  = null;
 
   // ─── PKCE HELPERS ──────────────────────────────────────────
   function randomString(length) {
@@ -849,11 +1013,13 @@
   document.addEventListener('DOMContentLoaded', () => {
     if (!accessToken) {
       show('screen-login');
+      hide('screen-difficulty');
       hide('screen-scan');
       document.getElementById('btn-login').addEventListener('click', startLogin);
     } else {
       hide('screen-login');
-      show('screen-scan');
+      show('screen-difficulty');
+      hide('screen-scan');
       document.getElementById('spotify-badge').style.display = '';
       document.getElementById('btn-logout').style.display = '';
     }
@@ -864,6 +1030,40 @@
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('token_expiry');
     location.reload();
+  }
+
+  // ─── DIFFICULTY ────────────────────────────────────────────
+  function selectDifficulty(mode) {
+    difficulty = mode;
+    document.querySelectorAll('.diff-card').forEach(el => el.classList.remove('selected'));
+    document.getElementById('diff-' + mode).classList.add('selected');
+  }
+
+  function startGame() {
+    const cfg = DIFFICULTY[difficulty];
+    document.getElementById('scan-diff-badge').textContent   = cfg.label;
+    document.getElementById('playing-diff-badge').textContent = cfg.label;
+    hide('screen-difficulty');
+    show('screen-scan');
+  }
+
+  // ─── TRACK METADATA ────────────────────────────────────────
+  async function fetchTrack(trackId) {
+    const token = localStorage.getItem('access_token');
+    try {
+      const res = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return {
+        artist: data.artists.map(a => a.name).join(', '),
+        title:  data.name,
+        year:   data.album.release_date.slice(0, 4),
+      };
+    } catch (_) {
+      return null;
+    }
   }
 
   // ─── WAVEFORM ──────────────────────────────────────────────
@@ -910,7 +1110,7 @@
     qrScanner.start();
   }
 
-  function handleQRResult(raw) {
+  async function handleQRResult(raw) {
     let trackId = null;
 
     const urlMatch = raw.match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/);
@@ -924,8 +1124,10 @@
       return;
     }
 
-    showScanResult('Track gevonden: ' + trackId, false);
+    showScanResult('Track gevonden — laden…', false);
     qrScanner.stop();
+
+    currentTrack = await fetchTrack(trackId);
     playTrack('spotify:track:' + trackId);
   }
 
@@ -1077,23 +1279,39 @@
       hide('ctrl-playing');
 
       document.getElementById('info-hidden').style.display = 'none';
+
+      const cfg = DIFFICULTY[difficulty];
+      const pts = bonusOnReveal ? cfg.bonusPoints : cfg.basePoints;
+
+      if (currentTrack) {
+        document.getElementById('meta-artist').textContent = currentTrack.artist;
+        document.getElementById('meta-title').textContent  = currentTrack.title;
+        document.getElementById('meta-year').textContent   = currentTrack.year;
+      } else {
+        document.getElementById('meta-artist').textContent = '';
+        document.getElementById('meta-title').textContent  = 'Info niet beschikbaar';
+        document.getElementById('meta-year').textContent   = '';
+      }
+
       document.getElementById('info-revealed').style.display = 'block';
       document.getElementById('album-art').classList.remove('playing');
       document.getElementById('status-dot').className = 'status-dot paused';
       setWaveformActive(false);
 
+      const bonusLabel = bonusOnReveal ? ' (bonus!)' : '';
       document.getElementById('btn-correct').textContent =
-        bonusOnReveal ? '✓ Goed geraden! (+3 pt, bonus!)' : '✓ Goed geraden! (+1 pt)';
+        `✓ Goed geraden! (+${pts} pt${bonusLabel})`;
 
       show('ctrl-revealed');
-      setPlaybackStatus('Gepauzeerd — flip het kaartje!');
+      setPlaybackStatus('Gepauzeerd — zie het antwoord!');
     });
   }
 
   // ─── SCORING ───────────────────────────────────────────────
   function awardPoints(correct) {
+    const cfg = DIFFICULTY[difficulty];
     if (correct) {
-      score  += bonusOnReveal ? 3 : 1;
+      score  += bonusOnReveal ? cfg.bonusPoints : cfg.basePoints;
       streak += 1;
     } else {
       streak = 0;
@@ -1120,6 +1338,7 @@
     result.textContent   = '';
     result.style.color   = '';
 
+    currentTrack = null;
     show('screen-scan');
   }
 
@@ -1131,9 +1350,16 @@
     hide('countdown-wrap');
     hide('bonus-banner');
 
+    const cfg = DIFFICULTY[difficulty];
+    document.getElementById('hint-label').textContent = cfg.hint;
+    document.getElementById('bonus-pts-display').textContent = '+' + cfg.bonusPoints;
+    document.getElementById('btn-reveal-countdown').textContent = `Onthullen (bonus: +${cfg.bonusPoints} pt)`;
+    document.getElementById('btn-reveal-paused').textContent   = `Onthullen (bonus: +${cfg.bonusPoints} pt)`;
+
     document.getElementById('info-hidden').style.display  = 'block';
     document.getElementById('info-revealed').style.display = 'none';
     document.getElementById('album-art').className        = 'album-art playing';
+    document.getElementById('album-art').textContent      = '🎵';
     document.getElementById('status-dot').className       = 'status-dot playing';
     document.getElementById('score-round-display').textContent = round;
 
