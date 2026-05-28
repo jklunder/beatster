@@ -807,12 +807,6 @@
       setTimeout(() => location.reload(), 2000);
     });
     player.addListener('account_error', () => setStatus('Geen Spotify Premium account'));
-    player.addListener('player_state_changed', state => {
-      if (pendingGameStart && state && !state.paused) {
-        pendingGameStart = false;
-        showGameScreen();
-      }
-    });
     player.connect();
   };
 
@@ -966,6 +960,10 @@
     document.getElementById('ready-player-name').textContent  = p ? p.name : '';
     document.getElementById('ready-round-display').textContent = round;
 
+    const readyBtn = document.querySelector('#screen-ready .btn-primary');
+    readyBtn.textContent = '▶ Luisteren starten';
+    readyBtn.disabled = false;
+
     hide('screen-scan');
     show('screen-ready');
   }
@@ -975,6 +973,24 @@
     btn.textContent = 'Laden…';
     btn.disabled = true;
     playTrack(pendingUri);
+  }
+
+  function pollForPlayback(deadline = Date.now() + 10000) {
+    if (!pendingGameStart) return;
+    player.getCurrentState().then(state => {
+      if (!pendingGameStart) return;
+      if (state && !state.paused) {
+        pendingGameStart = false;
+        showGameScreen();
+      } else if (Date.now() < deadline) {
+        setTimeout(() => pollForPlayback(deadline), 300);
+      } else {
+        pendingGameStart = false;
+        const btn = document.querySelector('#screen-ready .btn-primary');
+        if (btn) { btn.textContent = '▶ Luisteren starten'; btn.disabled = false; }
+        alert('Spotify reageert niet. Probeer opnieuw.');
+      }
+    });
   }
 
   // ─── PLAYBACK ───────────────────────────────────────────────
@@ -1002,7 +1018,7 @@
       return;
     }
 
-    if (res.status === 204) { pendingGameStart = true; showScanMsg('Laden…', false); return; }
+    if (res.status === 204) { pendingGameStart = true; pollForPlayback(); return; }
 
     let errMsg = `HTTP ${res.status}`;
     try {
