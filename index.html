@@ -889,6 +889,11 @@
         document.getElementById('playback-status').textContent = 'Aan het spelen';
         document.getElementById('toggle-btn').textContent      = '⏸ Pauzeer';
         setWaveformActive(true);
+        if (!bonusClaimed) {
+          const zone = document.getElementById('bonus-zone');
+          zone.classList.add('fading');
+          setTimeout(() => { zone.style.display = 'none'; zone.classList.remove('fading'); }, 400);
+        }
       });
     }
   }
