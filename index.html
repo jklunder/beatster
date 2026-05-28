@@ -13,10 +13,10 @@
       --surface2: #1e1e24;
       --border: rgba(255,255,255,0.07);
       --accent: #ff2d6e;
-      --accent2: #ff4d6d;
       --text: #f0ede8;
       --muted: #6b6a72;
       --green: #1DB954;
+      --gold: #ffb400;
       --radius: 14px;
     }
 
@@ -33,7 +33,6 @@
       overflow-x: hidden;
     }
 
-    /* Grain overlay */
     body::before {
       content: '';
       position: fixed;
@@ -44,7 +43,7 @@
       z-index: 999;
     }
 
-    /* ---- HEADER ---- */
+    /* ── HEADER ── */
     header {
       width: 100%;
       max-width: 480px;
@@ -54,11 +53,7 @@
       justify-content: space-between;
     }
 
-    .logo-img {
-      height: 48px;
-      width: auto;
-      object-fit: contain;
-    }
+    .logo-img { height: 48px; width: auto; object-fit: contain; }
 
     .spotify-badge {
       display: flex;
@@ -73,21 +68,14 @@
     }
 
     .btn-logout {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 11px;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 12px;
-      letter-spacing: 0.5px;
-      transition: color 0.2s;
+      background: none; border: none; color: var(--muted);
+      font-size: 11px; cursor: pointer; padding: 4px 8px;
+      border-radius: 12px; letter-spacing: 0.5px; transition: color 0.2s;
     }
     .btn-logout:hover { color: var(--text); }
 
     .spotify-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
+      width: 6px; height: 6px; border-radius: 50%;
       background: var(--green);
       animation: pulse 2s ease-in-out infinite;
     }
@@ -97,717 +85,351 @@
       50% { opacity: 0.5; transform: scale(0.8); }
     }
 
-    /* ---- MAIN ---- */
-    main {
-      width: 100%;
-      max-width: 480px;
-      padding: 24px;
-      flex: 1;
-    }
+    /* ── MAIN ── */
+    main { width: 100%; max-width: 480px; padding: 24px; flex: 1; }
 
-    /* ---- SCREEN SYSTEM ---- */
-    .screen {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .screen { display: flex; flex-direction: column; gap: 16px; }
 
-    /* ---- LOGIN SCREEN ---- */
+    /* ── LOGIN ── */
     .login-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 48px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      text-align: center;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 48px 24px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 20px; text-align: center;
     }
-
-    .login-icon {
-      font-size: 56px;
-      opacity: 0.7;
-    }
-
+    .login-icon { font-size: 56px; opacity: 0.7; }
     .login-card h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      letter-spacing: 2px;
-      color: var(--text);
+      font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px;
     }
+    .login-card p { font-size: 14px; color: var(--muted); line-height: 1.5; }
 
-    .login-card p {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    /* ---- DIFFICULTY SCREEN ---- */
+    /* ── MODE SCREEN ── */
     .screen-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 2px;
-      color: var(--text);
-      text-align: center;
+      font-size: 22px; letter-spacing: 2px; text-align: center;
     }
 
-    .diff-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .mode-grid { display: flex; flex-direction: column; gap: 12px; }
 
-    .diff-card {
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      cursor: pointer;
+    .mode-card {
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px; cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 16px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .mode-card:hover { border-color: rgba(255,180,0,0.35); background: rgba(255,180,0,0.04); }
+    .mode-card.selected { border-color: var(--gold); background: rgba(255,180,0,0.08); }
+
+    .mode-icon { font-size: 26px; width: 40px; text-align: center; flex-shrink: 0; }
+
+    .mode-info { flex: 1; }
+    .mode-name {
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+      letter-spacing: 1.5px; color: var(--gold);
+    }
+    .mode-hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .mode-meta { text-align: right; flex-shrink: 0; }
+    .mode-meta-row { font-size: 11px; color: var(--muted); line-height: 1.7; }
+    .mode-meta-row strong { color: var(--text); }
+
+    /* ── SCAN SCREEN ── */
+    .round-tag {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; font-size: 12px; color: var(--muted);
+      letter-spacing: 1px; text-transform: uppercase;
     }
 
-    .diff-card:hover {
-      border-color: rgba(255,255,255,0.18);
-      background: var(--surface2);
-    }
-
-    .diff-card.selected {
-      border-color: var(--accent);
-      background: rgba(255,45,110,0.06);
-    }
-
-    .diff-icon {
-      font-size: 26px;
-      width: 40px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .diff-info { flex: 1; }
-
-    .diff-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      letter-spacing: 1.5px;
-    }
-
-    .diff-hint {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .diff-pts { text-align: right; flex-shrink: 0; }
-
-    .diff-pts-row {
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .diff-pts-row strong { color: var(--text); }
-
-    .diff-badge {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      border-radius: 10px;
-      background: rgba(255,45,110,0.12);
-      color: var(--accent);
-      border: 1px solid rgba(255,45,110,0.25);
-    }
-
-    /* ---- SCAN SCREEN ---- */
     .scan-area {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      position: relative;
-      overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px 24px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 20px; position: relative; overflow: hidden;
     }
 
     .scan-frame {
-      width: 200px;
-      height: 200px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 200px; height: 200px; position: relative;
+      display: flex; align-items: center; justify-content: center;
     }
 
     .scan-frame::before, .scan-frame::after,
     .scan-frame .corner-bl, .scan-frame .corner-br {
-      content: '';
-      position: absolute;
+      content: ''; position: absolute;
       width: 28px; height: 28px;
-      border-color: var(--accent);
-      border-style: solid;
+      border-color: var(--gold); border-style: solid;
     }
-    .scan-frame::before { top: 0; left: 0; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
-    .scan-frame::after  { top: 0; right: 0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
-    .scan-frame .corner-bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
-    .scan-frame .corner-br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+    .scan-frame::before { top:0; left:0; border-width:3px 0 0 3px; border-radius:4px 0 0 0; }
+    .scan-frame::after  { top:0; right:0; border-width:3px 3px 0 0; border-radius:0 4px 0 0; }
+    .scan-frame .corner-bl { bottom:0; left:0; border-width:0 0 3px 3px; border-radius:0 0 0 4px; }
+    .scan-frame .corner-br { bottom:0; right:0; border-width:0 3px 3px 0; border-radius:0 0 4px 0; }
 
     .scan-line {
-      position: absolute;
-      left: 10px; right: 10px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      top: 10px;
-      animation: scanline 2s ease-in-out infinite;
-      box-shadow: 0 0 8px var(--accent);
+      position: absolute; left:10px; right:10px; height:2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      top:10px; animation: scanline 2s ease-in-out infinite;
+      box-shadow: 0 0 8px var(--gold);
     }
-
     @keyframes scanline {
-      0%   { top: 10px; opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: 1; }
-      100% { top: 180px; opacity: 0; }
+      0%   { top:10px; opacity:0; }
+      10%  { opacity:1; }
+      90%  { opacity:1; }
+      100% { top:180px; opacity:0; }
     }
 
-    .scan-icon {
-      font-size: 48px;
-      opacity: 0.2;
-    }
-
-    .scan-hint {
-      font-size: 14px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.5;
-    }
+    .scan-icon { font-size: 48px; opacity: 0.2; }
+    .scan-hint { font-size: 14px; color: var(--muted); text-align: center; line-height: 1.5; }
 
     #qr-video {
-      width: 200px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 2px solid var(--accent);
+      width: 200px; height: 200px; object-fit: cover;
+      border-radius: 8px; border: 2px solid var(--gold);
     }
 
-    #scan-result {
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-      word-break: break-all;
-    }
+    #scan-result { font-size: 11px; color: var(--muted); text-align: center; word-break: break-all; }
+    #player-status { font-size: 12px; color: var(--muted); text-align: center; }
 
-    #player-status {
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    /* ---- BUTTONS ---- */
+    /* ── BUTTONS ── */
     .btn-primary {
-      width: 100%;
-      padding: 14px;
-      background: var(--accent);
-      color: #0d0d0f;
-      border: none;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: transform 0.15s, opacity 0.15s;
-      letter-spacing: 0.3px;
+      width: 100%; padding: 14px;
+      background: var(--gold); color: #0d0d0f;
+      border: none; border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: transform 0.15s, opacity 0.15s; letter-spacing: 0.3px;
     }
-    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:hover { opacity: 0.88; }
     .btn-primary:active { transform: scale(0.98); }
 
     .btn-secondary {
-      width: 100%;
-      padding: 13px;
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      cursor: pointer;
+      width: 100%; padding: 13px;
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
     }
     .btn-secondary:hover { border-color: rgba(255,255,255,0.2); background: var(--surface2); }
 
-    .btn-play {
-      width: 100%;
-      padding: 16px;
-      background: var(--green);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: transform 0.15s, opacity 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    .btn-green {
+      width: 100%; padding: 15px;
+      background: var(--green); color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: transform 0.15s, opacity 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-play:hover { opacity: 0.9; }
-    .btn-play:active { transform: scale(0.98); }
+    .btn-green:hover { opacity: 0.9; }
+    .btn-green:active { transform: scale(0.98); }
 
-    .btn-reveal {
-      width: 100%;
-      padding: 14px;
-      background: var(--accent2);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: transform 0.15s, opacity 0.15s;
+    .btn-danger {
+      width: 100%; padding: 13px;
+      background: transparent; color: var(--accent);
+      border: 1px solid rgba(255,45,110,0.3); border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .btn-reveal:hover { opacity: 0.9; }
-    .btn-reveal:active { transform: scale(0.98); }
+    .btn-danger:hover { border-color: var(--accent); background: rgba(255,45,110,0.06); }
 
-    /* ---- SCORE BAR ---- */
-    .score-bar {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    button:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
 
-    .score-item { text-align: center; }
-    .score-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 26px;
-      line-height: 1;
-    }
-    .score-lbl {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
-
-    .score-divider {
-      width: 1px;
-      height: 32px;
-      background: var(--border);
-    }
-
-    /* ---- ROUND TAG ---- */
-    .round-tag {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    /* ---- TRACK CARD ---- */
+    /* ── TRACK CARD ── */
     .track-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      position: relative;
-      overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 20px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      position: relative; overflow: hidden;
     }
-
     .track-card::before {
-      content: '';
-      position: absolute;
-      top: -60px; left: -60px; right: -60px;
-      height: 200px;
-      background: radial-gradient(ellipse at 50% 0%, rgba(255,45,110,0.08) 0%, transparent 70%);
+      content: ''; position: absolute;
+      top:-60px; left:-60px; right:-60px; height:200px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,180,0,0.07) 0%, transparent 70%);
       pointer-events: none;
-    }
-
-    .album-art {
-      width: 140px; height: 140px;
-      border-radius: 10px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 56px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .album-art.playing::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,45,110,0.06);
-      animation: albumPulse 1s ease-in-out infinite;
-    }
-    @keyframes albumPulse {
-      0%,100% { opacity: 0; }
-      50% { opacity: 1; }
     }
 
     .track-status {
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); display: flex; align-items: center; gap: 6px;
     }
 
-    .status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-    }
-    .status-dot.paused { background: var(--accent2); animation: none; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .status-dot.paused { background: var(--muted); animation: none; }
     .status-dot.playing { animation: pulse 1s ease-in-out infinite; }
 
-    /* Hidden track info */
-    .track-info-hidden { text-align: center; }
-    .track-info-hidden .hidden-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
+    .album-art {
+      width: 120px; height: 120px; border-radius: 10px;
+      background: var(--surface2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; position: relative; overflow: hidden;
     }
-    .track-info-hidden .hidden-blocks {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .album-art.playing::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(255,180,0,0.05);
+      animation: albumPulse 1s ease-in-out infinite;
     }
-    .hidden-block {
-      height: 12px;
-      border-radius: 4px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
+    @keyframes albumPulse { 0%,100% { opacity:0; } 50% { opacity:1; } }
+
+    .waveform { display: flex; align-items: center; gap: 3px; height: 20px; }
+    .wave-bar { width: 3px; border-radius: 2px; background: var(--gold); opacity: 0.5; }
+    .wave-bar.active { animation: waveAnim var(--spd) ease-in-out infinite alternate; }
+    @keyframes waveAnim { from { transform: scaleY(0.2); } to { transform: scaleY(1); } }
+
+    .track-hint {
+      font-size: 12px; color: var(--muted); text-align: center;
+      background: rgba(255,180,0,0.06); border: 1px solid rgba(255,180,0,0.15);
+      border-radius: 8px; padding: 8px 14px; line-height: 1.5;
+    }
+    .track-hint strong { color: var(--gold); }
+
+    /* ── TOKEN ROW ── */
+    .token-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 16px;
     }
 
-    /* Revealed track info */
-    .track-info-revealed {
-      text-align: center;
-      animation: fadeUp 0.4s ease forwards;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .token-left { display: flex; align-items: center; gap: 10px; }
 
-    .track-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      align-items: center;
-    }
+    .token-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
 
-    .track-meta-artist {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
+    .token-dots { display: flex; gap: 5px; }
 
-    .track-meta-title {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--text);
-      line-height: 1.3;
+    .token-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--gold);
     }
+    .token-dot.spent { background: var(--surface2); border: 1px solid var(--border); }
 
-    .track-meta-year {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
-      color: var(--accent);
-      letter-spacing: 3px;
-      margin-top: 4px;
-    }
-
-    /* ---- COUNTDOWN ---- */
-    .countdown-wrap {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .countdown-bar-bg {
-      width: 100%;
-      height: 4px;
-      background: var(--surface2);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    #countdown-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 2px;
-      transition: width 0.1s linear;
-      box-shadow: 0 0 6px var(--accent);
-    }
-
-    #countdown-label {
-      font-size: 12px;
-      color: var(--muted);
-    }
-    #countdown-label span {
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    /* ---- BONUS BANNER ---- */
-    .bonus-banner {
-      background: linear-gradient(135deg, rgba(255,45,110,0.12), rgba(255,45,110,0.04));
-      border: 1px solid rgba(255,45,110,0.3);
-      border-radius: 10px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      animation: fadeUp 0.3s ease forwards;
-    }
-    .bonus-text {
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .bonus-text strong {
-      color: var(--accent);
-      display: block;
-      font-size: 14px;
-      margin-bottom: 2px;
-    }
-    .bonus-pts {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      color: var(--accent);
+    .btn-skip {
+      font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 6px 12px; cursor: pointer; transition: all 0.15s;
       white-space: nowrap;
     }
+    .btn-skip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+    .btn-skip:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
 
-    /* ---- CONTROLS ---- */
-    .controls {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    /* ---- WAVEFORM ---- */
-    .waveform {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      height: 24px;
-    }
-    .wave-bar {
-      width: 3px;
-      border-radius: 2px;
-      background: var(--accent);
-      opacity: 0.6;
-    }
-    .wave-bar.active {
-      animation: waveAnim var(--spd) ease-in-out infinite alternate;
-    }
-    @keyframes waveAnim {
-      from { transform: scaleY(0.2); }
-      to   { transform: scaleY(1); }
-    }
-
-    /* ---- FOOTER ---- */
-    footer {
-      padding: 20px;
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-      letter-spacing: 0.5px;
-    }
-
-    /* ---- SPLASH SCREEN ---- */
-    #splash {
-      position: fixed;
-      inset: 0;
-      background: #080810;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      cursor: pointer;
-      transition: opacity 0.6s ease;
-    }
-    #splash.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-    #splash img {
-      width: 100%;
-      max-width: 680px;
-      object-fit: contain;
-    }
-    #splash-hint {
-      margin-top: 32px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      animation: hintPulse 2s ease-in-out infinite;
-    }
-    @keyframes hintPulse {
-      0%, 100% { opacity: 0.35; }
-      50% { opacity: 0.7; }
-    }
-
-    /* ---- HITSTER MODE ---- */
-    .diff-card-hitster { border-color: rgba(255,180,0,0.2); }
-    .diff-card-hitster:hover { border-color: rgba(255,180,0,0.4); background: rgba(255,180,0,0.04); }
-    .diff-card-hitster.selected { border-color: #ffb400; background: rgba(255,180,0,0.08); }
-    .diff-card-hitster .diff-name { color: #ffb400; }
-
-    .diff-mode-sep {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    .diff-mode-sep::before,
-    .diff-mode-sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-    .hitster-badge {
-      background: rgba(255,180,0,0.12);
-      color: #ffb400;
-      border-color: rgba(255,180,0,0.3);
-    }
-
-    .hitster-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .hitster-progress {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 24px;
-      letter-spacing: 1px;
-    }
-
+    /* ── TIMELINE ── */
     .timeline-section { display: flex; flex-direction: column; gap: 8px; }
 
     .timeline-label {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 1px; text-transform: uppercase;
     }
 
     .timeline-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-height: 260px;
-      overflow-y: auto;
+      display: flex; flex-direction: column; gap: 6px;
+      max-height: 240px; overflow-y: auto;
     }
 
     .timeline-slot-btn {
-      width: 100%;
-      padding: 9px 14px;
-      border: 1px dashed rgba(255,255,255,0.1);
-      border-radius: 8px;
-      background: transparent;
-      color: var(--muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.15s;
-      text-align: left;
+      width: 100%; padding: 9px 14px;
+      border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;
+      background: transparent; color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: 12px;
+      cursor: pointer; transition: all 0.15s; text-align: left;
     }
-    .timeline-slot-btn:hover { border-color: #ffb400; color: #ffb400; background: rgba(255,180,0,0.04); }
-    .timeline-slot-btn.selected { border-style: solid; border-color: #ffb400; color: #ffb400; background: rgba(255,180,0,0.1); font-weight: 500; }
+    .timeline-slot-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(255,180,0,0.04); }
+    .timeline-slot-btn.selected { border-style: solid; border-color: var(--gold); color: var(--gold); background: rgba(255,180,0,0.1); font-weight: 500; }
 
     .timeline-card-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-
     .timeline-card-info { flex: 1; min-width: 0; }
-
     .timeline-card-artist {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 11px; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-
     .timeline-card-title {
-      font-size: 14px;
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 14px; margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-
     .timeline-card-year {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 24px;
-      color: #ffb400;
-      flex-shrink: 0;
+      font-family: 'Bebas Neue', sans-serif; font-size: 24px;
+      color: var(--gold); flex-shrink: 0;
     }
 
-    .hitster-result-card {
-      border-radius: var(--radius);
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      text-align: center;
-      animation: fadeUp 0.4s ease forwards;
+    /* ── RESULT / VERIFY STEP ── */
+    .result-card {
+      border-radius: var(--radius); padding: 24px 20px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; text-align: center;
+      animation: fadeUp 0.35s ease forwards;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(8px); }
+      to   { opacity:1; transform:translateY(0); }
     }
     .result-correct { background: rgba(29,185,84,0.08); border: 1px solid rgba(29,185,84,0.3); }
     .result-wrong   { background: rgba(255,45,110,0.08); border: 1px solid rgba(255,45,110,0.3); }
+    .result-neutral { background: var(--surface); border: 1px solid var(--border); }
 
-    .hitster-result-icon { font-size: 32px; font-weight: 700; line-height: 1; }
+    .result-icon { font-size: 30px; font-weight: 700; line-height: 1; }
 
-    button:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+    .track-meta { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+    .track-meta-artist { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .track-meta-title  { font-size: 17px; font-weight: 500; color: var(--text); line-height: 1.3; }
+    .track-meta-year   { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--gold); letter-spacing: 3px; margin-top: 2px; }
+
+    .result-msg { font-size: 13px; color: var(--muted); }
+
+    .extra-question {
+      font-size: 14px; color: var(--text); line-height: 1.5; text-align: center;
+    }
+    .extra-question span { color: var(--gold); }
+
+    /* ── PROGRESS BAR ── */
+    .progress-header {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .progress-bar-wrap {
+      flex: 1; margin: 0 12px;
+      height: 4px; background: var(--surface2);
+      border-radius: 2px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%; background: var(--gold);
+      border-radius: 2px; transition: width 0.4s ease;
+    }
+
+    .progress-count {
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+      letter-spacing: 1px; white-space: nowrap;
+    }
+
+    .mode-badge {
+      font-size: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 10px;
+      background: rgba(255,180,0,0.12); color: var(--gold);
+      border: 1px solid rgba(255,180,0,0.3);
+    }
+
+    /* ── SPLASH ── */
+    #splash {
+      position: fixed; inset: 0; background: #080810;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999; cursor: pointer;
+      transition: opacity 0.6s ease;
+    }
+    #splash.fade-out { opacity: 0; pointer-events: none; }
+    #splash img { width: 100%; max-width: 680px; object-fit: contain; }
+    #splash-hint {
+      margin-top: 32px; font-size: 13px; color: rgba(255,255,255,0.35);
+      letter-spacing: 1.5px; text-transform: uppercase;
+      animation: hintPulse 2s ease-in-out infinite;
+    }
+    @keyframes hintPulse { 0%,100% { opacity:0.35; } 50% { opacity:0.7; } }
+
+    footer {
+      padding: 20px; font-size: 11px; color: var(--muted);
+      text-align: center; letter-spacing: 0.5px;
+    }
   </style>
 </head>
 <body>
 
-<!-- ===================== SPLASH SCREEN ===================== -->
+<!-- SPLASH -->
 <div id="splash" onclick="dismissSplash()">
   <img src="splash.png" alt="Beatster" />
   <div id="splash-hint">Tik om te beginnen</div>
@@ -818,7 +440,7 @@
   <div style="display:flex;align-items:center;gap:8px">
     <div class="spotify-badge" id="spotify-badge" style="display:none">
       <div class="spotify-dot"></div>
-      <span id="spotify-badge-text">Spotify verbonden</span>
+      <span>Spotify verbonden</span>
     </div>
     <button class="btn-logout" id="btn-logout" style="display:none" onclick="logout()">Uitloggen</button>
   </div>
@@ -826,70 +448,56 @@
 
 <main>
 
-  <!-- ===================== LOGIN SCREEN ===================== -->
+  <!-- LOGIN -->
   <div id="screen-login" class="screen">
     <div class="login-card">
-      <div class="login-icon">🎵</div>
+      <div class="login-icon">🎯</div>
       <h2>Welkom bij Beatster</h2>
       <p>Log in met Spotify Premium<br>om te spelen.</p>
       <button id="btn-login" class="btn-primary">Inloggen met Spotify</button>
     </div>
   </div>
 
-  <!-- ===================== DIFFICULTY SCREEN ===================== -->
-  <div id="screen-difficulty" class="screen" style="display:none">
+  <!-- MODE SELECTION -->
+  <div id="screen-mode" class="screen" style="display:none">
 
-    <p class="screen-title">Kies je niveau</p>
+    <p class="screen-title">Kies je moeilijkheidsgraad</p>
 
-    <div class="diff-grid">
+    <div class="mode-grid">
 
-      <div class="diff-card selected" id="diff-normaal" onclick="selectDifficulty('normaal')">
-        <div class="diff-icon">🎵</div>
-        <div class="diff-info">
-          <div class="diff-name">Normaal</div>
-          <div class="diff-hint">Raad het decennium</div>
+      <div class="mode-card selected" id="mode-normaal" onclick="selectMode('normaal')">
+        <div class="mode-icon">🎵</div>
+        <div class="mode-info">
+          <div class="mode-name">Normaal</div>
+          <div class="mode-hint">Zet liedjes in de juiste volgorde</div>
         </div>
-        <div class="diff-pts">
-          <div class="diff-pts-row">Correct: <strong>+1 pt</strong></div>
-          <div class="diff-pts-row">Bonus: <strong>+3 pt</strong></div>
-        </div>
-      </div>
-
-      <div class="diff-card" id="diff-pro" onclick="selectDifficulty('pro')">
-        <div class="diff-icon">🔥</div>
-        <div class="diff-info">
-          <div class="diff-name">Pro</div>
-          <div class="diff-hint">Raad artiest & songtitel</div>
-        </div>
-        <div class="diff-pts">
-          <div class="diff-pts-row">Correct: <strong>+2 pt</strong></div>
-          <div class="diff-pts-row">Bonus: <strong>+4 pt</strong></div>
+        <div class="mode-meta">
+          <div class="mode-meta-row">Start: <strong>2 tokens, 1 kaartje</strong></div>
+          <div class="mode-meta-row">Doel: <strong>10 kaartjes</strong></div>
         </div>
       </div>
 
-      <div class="diff-card" id="diff-expert" onclick="selectDifficulty('expert')">
-        <div class="diff-icon">💀</div>
-        <div class="diff-info">
-          <div class="diff-name">Expert</div>
-          <div class="diff-hint">Raad artiest, titel & jaar</div>
+      <div class="mode-card" id="mode-pro" onclick="selectMode('pro')">
+        <div class="mode-icon">🔥</div>
+        <div class="mode-info">
+          <div class="mode-name">Pro</div>
+          <div class="mode-hint">Volgorde + artiest & songtitel</div>
         </div>
-        <div class="diff-pts">
-          <div class="diff-pts-row">Correct: <strong>+3 pt</strong></div>
-          <div class="diff-pts-row">Bonus: <strong>+5 pt</strong></div>
+        <div class="mode-meta">
+          <div class="mode-meta-row">Start: <strong>5 tokens, 1 kaartje</strong></div>
+          <div class="mode-meta-row">Doel: <strong>10 kaartjes</strong></div>
         </div>
       </div>
 
-      <div class="diff-mode-sep">originele hitster regels</div>
-
-      <div class="diff-card diff-card-hitster" id="diff-hitster" onclick="selectDifficulty('hitster')">
-        <div class="diff-icon">🎯</div>
-        <div class="diff-info">
-          <div class="diff-name">Hitster</div>
-          <div class="diff-hint">Bouw een tijdlijn van 10 liedjes</div>
+      <div class="mode-card" id="mode-expert" onclick="selectMode('expert')">
+        <div class="mode-icon">💀</div>
+        <div class="mode-info">
+          <div class="mode-name">Expert</div>
+          <div class="mode-hint">Volgorde + artiest, titel & exact jaar</div>
         </div>
-        <div class="diff-pts">
-          <div class="diff-pts-row">Doel: <strong>10 kaartjes</strong></div>
-          <div class="diff-pts-row">In de juiste volgorde</div>
+        <div class="mode-meta">
+          <div class="mode-meta-row">Start: <strong>3 tokens, 1 kaartje</strong></div>
+          <div class="mode-meta-row">Doel: <strong>10 kaartjes</strong></div>
         </div>
       </div>
 
@@ -899,13 +507,14 @@
 
   </div>
 
-  <!-- ===================== SCAN SCREEN ===================== -->
+  <!-- SCAN -->
   <div id="screen-scan" class="screen" style="display:none">
 
     <div class="round-tag">
-      <span>Ronde</span>
-      <strong id="round-display" style="color:var(--text)">1</strong>
-      <span id="scan-diff-badge" class="diff-badge" style="margin-left:4px">Normaal</span>
+      <span id="mode-badge-scan" class="mode-badge">Normaal</span>
+      <span style="margin:0 6px">·</span>
+      <span>Kaartje</span>
+      <strong id="round-display" style="color:var(--text);margin-left:4px">1</strong>
     </div>
 
     <p id="player-status"></p>
@@ -928,352 +537,660 @@
 
   </div>
 
-  <!-- ===================== PLAYING SCREEN ===================== -->
-  <div id="screen-playing" class="screen" style="display:none">
+  <!-- GAME (Hitster) -->
+  <div id="screen-game" class="screen" style="display:none">
 
-    <div style="display:flex;justify-content:flex-end">
-      <span class="diff-badge" id="playing-diff-badge">Normaal</span>
-    </div>
-
-    <div class="score-bar">
-      <div class="score-item">
-        <div class="score-num" id="score-total">0</div>
-        <div class="score-lbl">Punten</div>
+    <!-- Progress header -->
+    <div class="progress-header">
+      <span class="mode-badge" id="mode-badge-game">Normaal</span>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
       </div>
-      <div class="score-divider"></div>
-      <div class="score-item">
-        <div class="score-num" id="score-round-display">1</div>
-        <div class="score-lbl">Ronde</div>
-      </div>
-      <div class="score-divider"></div>
-      <div class="score-item">
-        <div class="score-num" id="score-streak">0</div>
-        <div class="score-lbl">Streak</div>
+      <div class="progress-count">
+        <span id="correct-count">0</span><span style="color:var(--muted);font-size:13px;font-family:'DM Sans',sans-serif;letter-spacing:0">/10</span>
       </div>
     </div>
 
+    <!-- Track card -->
     <div class="track-card">
       <div class="track-status">
         <div class="status-dot playing" id="status-dot"></div>
         <span id="playback-status">Aan het spelen</span>
       </div>
-
       <div class="album-art playing" id="album-art">🎵</div>
-
       <div class="waveform" id="waveform"></div>
+      <div class="track-hint" id="track-hint" style="display:none"></div>
+    </div>
 
-      <!-- Hidden info (shown while playing) -->
-      <div class="track-info-hidden" id="info-hidden">
-        <p class="hidden-label" id="hint-label">Raad het decennium</p>
-        <div class="hidden-blocks">
-          <div class="hidden-block" style="width:90px"></div>
-          <div class="hidden-block" style="width:55px"></div>
-        </div>
-        <div class="hidden-blocks" style="margin-top:6px">
-          <div class="hidden-block" style="width:40px"></div>
-        </div>
+    <!-- STATE: PLAYING -->
+    <div id="state-playing">
+
+      <button class="btn-green" id="toggle-btn" onclick="togglePlay()">⏸ Pauzeren</button>
+
+      <!-- Timeline with slot selection -->
+      <div class="timeline-section">
+        <p class="timeline-label" id="timeline-label">Jouw tijdlijn — kies een plek</p>
+        <div id="timeline" class="timeline-wrap"></div>
       </div>
 
-      <!-- Revealed info (shown after reveal) -->
-      <div class="track-info-revealed" id="info-revealed" style="display:none">
+      <button class="btn-primary" id="btn-verify" onclick="onVerify()" disabled>
+        ✓ Verifieer plaatsing
+      </button>
+
+      <!-- Tokens + skip -->
+      <div class="token-row">
+        <div class="token-left">
+          <span class="token-label">Tokens</span>
+          <div class="token-dots" id="token-dots"></div>
+        </div>
+        <button class="btn-skip" id="btn-skip" onclick="skipCard()">⏭ Skip (−1 token)</button>
+      </div>
+
+      <!-- Trade tokens (shown when ≥3 tokens and slot selected) -->
+      <button class="btn-secondary" id="btn-trade" onclick="tradeTokens()" style="display:none;font-size:13px">
+        ↕ Ruil 3 tokens — gratis plaatsen
+      </button>
+
+    </div>
+
+    <!-- STATE: EXTRA (Pro/Expert only — did you know the extra info?) -->
+    <div id="state-extra" style="display:none">
+
+      <div class="result-card result-neutral" id="extra-reveal-card">
         <div class="track-meta">
-          <div class="track-meta-artist" id="meta-artist"></div>
-          <div class="track-meta-title" id="meta-title"></div>
-          <div class="track-meta-year" id="meta-year"></div>
+          <div class="track-meta-artist" id="extra-artist"></div>
+          <div class="track-meta-title"  id="extra-title"></div>
+          <div class="track-meta-year"   id="extra-year"></div>
         </div>
-      </div>
-    </div>
-
-    <!-- Countdown bar (first 3 seconds) -->
-    <div class="countdown-wrap" id="countdown-wrap" style="display:none">
-      <div class="countdown-bar-bg">
-        <div id="countdown-bar-fill" style="width:100%"></div>
-      </div>
-      <p id="countdown-label">Auto-pauze over <span id="countdown-num">3</span>s — raad nu voor bonus!</p>
-    </div>
-
-    <!-- Bonus banner (after auto-pause) -->
-    <div class="bonus-banner" id="bonus-banner" style="display:none">
-      <div class="bonus-text">
-        <strong>⚡ Bonusronde!</strong>
-        Raad je het nu? Dan krijg je extra punten.
-      </div>
-      <div class="bonus-pts" id="bonus-pts-display">+3</div>
-    </div>
-
-    <!-- Controls -->
-    <div class="controls">
-
-      <!-- State A: playing during countdown -->
-      <div id="ctrl-countdown">
-        <button class="btn-reveal" id="btn-reveal-countdown" onclick="revealAndPause(true)">Onthullen (bonus: +3 pt)</button>
-        <button class="btn-secondary" style="margin-top:10px" onclick="skipBonus()">Meer spelen →</button>
+        <p class="result-msg" id="extra-placement-msg"></p>
       </div>
 
-      <!-- State B: auto-paused, bonus window open -->
-      <div id="ctrl-paused" style="display:none">
-        <button class="btn-play" onclick="resumePlayback()">▶ Doorgaan met luisteren</button>
-        <button class="btn-reveal" style="margin-top:10px" id="btn-reveal-paused" onclick="revealAndPause(true)">Onthullen (bonus: +3 pt)</button>
-      </div>
+      <p class="extra-question" id="extra-question"></p>
 
-      <!-- State C: playing normally after skipping bonus -->
-      <div id="ctrl-playing" style="display:none">
-        <button class="btn-reveal" onclick="revealAndPause(false)">Onthullen</button>
-      </div>
-
-      <!-- State D: revealed, awaiting score input -->
-      <div id="ctrl-revealed" style="display:none">
-        <button class="btn-play" onclick="awardPoints(true)" id="btn-correct">✓ Goed geraden! (+1 pt)</button>
-        <button class="btn-secondary" style="margin-top:10px" onclick="awardPoints(false)">✗ Fout geraden</button>
-      </div>
-
-      <!-- State E: next round -->
-      <div id="ctrl-next" style="display:none">
-        <button class="btn-primary" onclick="nextRound()">Volgende kaartje →</button>
-      </div>
+      <button class="btn-green" onclick="answerExtra(true)">✓ Ja, kende ik</button>
+      <button class="btn-danger" onclick="answerExtra(false)">✗ Nee, kende ik niet</button>
 
     </div>
 
-  </div>
+    <!-- STATE: RESULT -->
+    <div id="state-result" style="display:none">
 
-  <!-- ===================== HITSTER SCREEN ===================== -->
-  <div id="screen-hitster" class="screen" style="display:none">
-
-    <div class="hitster-header">
-      <span class="diff-badge hitster-badge">Hitster</span>
-      <div class="hitster-progress">
-        <span id="hitster-correct">0</span><span style="color:var(--muted);font-size:14px;font-family:'DM Sans',sans-serif;letter-spacing:0"> / 10 kaartjes</span>
-      </div>
-    </div>
-
-    <div class="track-card">
-      <div class="track-status">
-        <div class="status-dot playing" id="hitster-status-dot"></div>
-        <span id="hitster-playback-status">Aan het spelen</span>
-      </div>
-      <div class="album-art playing" id="hitster-album-art">🎵</div>
-      <div class="waveform" id="hitster-waveform"></div>
-      <div class="track-info-hidden">
-        <p class="hidden-label">Luister — bepaal het jaar</p>
-        <div class="hidden-blocks">
-          <div class="hidden-block" style="width:40px"></div>
-        </div>
-      </div>
-    </div>
-
-    <div id="hitster-playing-controls">
-      <button class="btn-play" id="hitster-toggle-btn" onclick="hitsterTogglePlay()">⏸ Pauzeren</button>
-    </div>
-
-    <div class="timeline-section">
-      <p class="timeline-label" id="timeline-label">Jouw tijdlijn — kies een plek</p>
-      <div id="hitster-timeline" class="timeline-wrap"></div>
-    </div>
-
-    <button class="btn-reveal" id="btn-hitster-verify" onclick="hitsterVerify()" disabled>
-      ✓ Verifieer plaatsing
-    </button>
-
-    <div id="hitster-result" style="display:none">
-      <div id="hitster-result-card" class="hitster-result-card">
-        <div class="hitster-result-icon" id="hitster-result-icon"></div>
+      <div class="result-card" id="result-card">
+        <div class="result-icon" id="result-icon"></div>
         <div class="track-meta">
-          <div class="track-meta-artist" id="hitster-meta-artist"></div>
-          <div class="track-meta-title" id="hitster-meta-title"></div>
-          <div class="track-meta-year" id="hitster-meta-year" style="color:#ffb400"></div>
+          <div class="track-meta-artist" id="result-artist"></div>
+          <div class="track-meta-title"  id="result-title"></div>
+          <div class="track-meta-year"   id="result-year"></div>
         </div>
-        <p id="hitster-result-text" style="font-size:13px;color:var(--muted)"></p>
+        <p class="result-msg" id="result-msg"></p>
       </div>
-      <button class="btn-primary" id="hitster-next-btn" style="margin-top:4px" onclick="hitsterNextRound()">
+
+      <!-- Timeline read-only (updated) -->
+      <div class="timeline-section">
+        <p class="timeline-label">Jouw tijdlijn</p>
+        <div id="timeline-result" class="timeline-wrap"></div>
+      </div>
+
+      <button class="btn-primary" id="btn-next" onclick="nextRound()">
         Volgende kaartje →
       </button>
+
     </div>
 
   </div>
 
 </main>
 
-<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.1.4</span></footer>
+<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.2.0</span></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.umd.min.js"></script>
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
 <script>
 
-  // ─── CONFIG ────────────────────────────────────────────────
+  // ─── CONFIG ─────────────────────────────────────────────────
   const CLIENT_ID    = '6706ea226f8f48939311fae46386f74b';
   const REDIRECT_URI = 'https://jklunder.github.io/beatster/callback.html';
   const SCOPES       = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
 
-  const DIFFICULTY = {
-    normaal: { label: 'Normaal', hint: 'Raad het decennium',        basePoints: 1, bonusPoints: 3 },
-    pro:     { label: 'Pro',     hint: 'Raad artiest & songtitel',  basePoints: 2, bonusPoints: 4 },
-    expert:  { label: 'Expert',  hint: 'Raad artiest, titel & jaar', basePoints: 3, bonusPoints: 5 },
+  const MODES = {
+    normaal: { label: 'Normaal', tokens: 2, extra: null },
+    pro:     { label: 'Pro',     tokens: 5, extra: 'artiest & songtitel' },
+    expert:  { label: 'Expert',  tokens: 3, extra: 'artiest, songtitel & exact jaar' },
   };
 
-  // ─── STATE ─────────────────────────────────────────────────
-  let accessToken   = localStorage.getItem('access_token');
-  let deviceId      = null;
+  const TARGET = 10;
+
+  // ─── STATE ──────────────────────────────────────────────────
+  let accessToken    = localStorage.getItem('access_token');
+  let deviceId       = null;
   let deviceReadyTime = null;
-  let player        = null;
-  let score         = 0;
-  let streak        = 0;
-  let round         = 1;
-  let bonusOnReveal = false;
-  let countdownInterval = null;
-  let qrScanner     = null;
-  let difficulty    = 'normaal';
-  let currentTrack  = null;
+  let player         = null;
+  let qrScanner      = null;
+  let currentTrack   = null;   // {artist, title, year, yearNum}
 
-  // Hitster-specific state
-  const HITSTER_TARGET  = 10;
-  let hitsterTimeline   = [];   // [{title, artist, year, yearNum}] sorted by yearNum
-  let hitsterCorrect    = 0;
-  let hitsterSlot       = null; // selected insertion index
-  let hitsterPlaying    = true;
+  let mode           = 'normaal';
+  let tokens         = 2;
+  let timeline       = [];     // [{title, artist, year, yearNum}] sorted by yearNum
+  let correctCount   = 0;
+  let round          = 1;
+  let selectedSlot   = null;
+  let isPlaying      = true;
+  let placementOk    = false;  // used between state-extra and state-result
 
-  // ─── PKCE HELPERS ──────────────────────────────────────────
-  function randomString(length) {
+  // ─── PKCE ───────────────────────────────────────────────────
+  function randomString(len) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-    let result = '';
-    const arr = new Uint8Array(length);
+    const arr = new Uint8Array(len);
     crypto.getRandomValues(arr);
-    arr.forEach(b => result += chars[b % chars.length]);
-    return result;
+    return Array.from(arr, b => chars[b % chars.length]).join('');
   }
 
   async function sha256(plain) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(plain);
-    return crypto.subtle.digest('SHA-256', data);
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(plain));
   }
 
-  function base64urlEncode(buffer) {
-    return btoa(String.fromCharCode(...new Uint8Array(buffer)))
-      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  function base64urlEncode(buf) {
+    return btoa(String.fromCharCode(...new Uint8Array(buf)))
+      .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
   }
 
   async function startLogin() {
     const verifier  = randomString(64);
     const challenge = base64urlEncode(await sha256(verifier));
-
     sessionStorage.setItem('pkce_verifier', verifier);
-
-    const url = 'https://accounts.spotify.com/authorize'
-      + '?client_id='     + CLIENT_ID
+    window.location = 'https://accounts.spotify.com/authorize'
+      + '?client_id='          + CLIENT_ID
       + '&response_type=code'
-      + '&redirect_uri='  + encodeURIComponent(REDIRECT_URI)
-      + '&scope='         + encodeURIComponent(SCOPES)
+      + '&redirect_uri='       + encodeURIComponent(REDIRECT_URI)
+      + '&scope='              + encodeURIComponent(SCOPES)
       + '&code_challenge_method=S256'
-      + '&code_challenge=' + challenge;
-
-    window.location = url;
+      + '&code_challenge='     + challenge;
   }
 
-  // ─── SPOTIFY WEB PLAYBACK SDK ──────────────────────────────
+  // ─── SPOTIFY SDK ────────────────────────────────────────────
   window.onSpotifyWebPlaybackSDKReady = () => {
     if (!accessToken) return;
-
     player = new Spotify.Player({
       name: 'Beatster',
       getOAuthToken: cb => cb(localStorage.getItem('access_token')),
-      volume: 0.8
+      volume: 0.8,
     });
-
     player.addListener('ready', ({ device_id }) => {
       deviceId = device_id;
       deviceReadyTime = Date.now();
       setStatus('✅ Klaar om te spelen');
-      console.log('[Beatster] SDK ready, device_id:', device_id);
     });
-
-    player.addListener('not_ready', () => setStatus('⚠️ Speler niet beschikbaar'));
+    player.addListener('not_ready',           () => setStatus('⚠️ Speler niet beschikbaar'));
     player.addListener('initialization_error', e => setStatus('Init fout: ' + e.message));
-    player.addListener('authentication_error', e => {
-      setStatus('Auth fout — opnieuw inloggen');
-      console.error('[Beatster] authentication_error', e);
+    player.addListener('authentication_error', () => {
       localStorage.removeItem('access_token');
       setTimeout(() => location.reload(), 2000);
     });
-    player.addListener('account_error', e => {
-      setStatus('Geen Spotify Premium account');
-      console.error('[Beatster] account_error', e);
-    });
-
+    player.addListener('account_error', () => setStatus('Geen Spotify Premium account'));
     player.connect();
   };
 
-  // ─── SPLASH ────────────────────────────────────────────────
-  function dismissSplash() {
-    const splash = document.getElementById('splash');
-    splash.classList.add('fade-out');
-    splash.addEventListener('transitionend', () => splash.remove(), { once: true });
-  }
-
-  // ─── INIT ──────────────────────────────────────────────────
+  // ─── INIT ───────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     if (!accessToken) {
       show('screen-login');
-      hide('screen-difficulty');
-      hide('screen-scan');
       document.getElementById('btn-login').addEventListener('click', startLogin);
     } else {
       hide('screen-login');
-      show('screen-difficulty');
-      hide('screen-scan');
+      show('screen-mode');
       document.getElementById('spotify-badge').style.display = '';
-      document.getElementById('btn-logout').style.display = '';
+      document.getElementById('btn-logout').style.display    = '';
     }
   });
 
+  function dismissSplash() {
+    const s = document.getElementById('splash');
+    s.classList.add('fade-out');
+    s.addEventListener('transitionend', () => s.remove(), { once: true });
+  }
+
   function logout() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('token_expiry');
+    ['access_token','refresh_token','token_expiry'].forEach(k => localStorage.removeItem(k));
     location.reload();
   }
 
-  // ─── DIFFICULTY ────────────────────────────────────────────
-  function selectDifficulty(mode) {
-    difficulty = mode;
-    document.querySelectorAll('.diff-card').forEach(el => el.classList.remove('selected'));
-    document.getElementById('diff-' + mode).classList.add('selected');
+  // ─── MODE SELECTION ─────────────────────────────────────────
+  function selectMode(m) {
+    mode = m;
+    document.querySelectorAll('.mode-card').forEach(el => el.classList.remove('selected'));
+    document.getElementById('mode-' + m).classList.add('selected');
   }
 
   function startGame() {
-    const label = difficulty === 'hitster' ? 'Hitster' : DIFFICULTY[difficulty].label;
-    document.getElementById('scan-diff-badge').textContent    = label;
-    document.getElementById('playing-diff-badge').textContent = label;
+    const cfg = MODES[mode];
+    tokens       = cfg.tokens;
+    timeline     = [];
+    correctCount = 0;
+    round        = 1;
 
-    if (difficulty === 'hitster') {
-      hitsterTimeline = [];
-      hitsterCorrect  = 0;
-      document.getElementById('hitster-correct').textContent = '0';
-    }
+    document.getElementById('mode-badge-scan').textContent = cfg.label;
+    document.getElementById('mode-badge-game').textContent = cfg.label;
+    document.getElementById('correct-count').textContent   = '0';
+    document.getElementById('progress-fill').style.width   = '0%';
 
-    hide('screen-difficulty');
+    hide('screen-mode');
     show('screen-scan');
   }
 
-  // ─── TRACK METADATA ────────────────────────────────────────
+  // ─── TRACK METADATA ─────────────────────────────────────────
   async function fetchTrack(trackId) {
     const token = localStorage.getItem('access_token');
     try {
-      const res = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
-        headers: { 'Authorization': 'Bearer ' + token }
+      const res  = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+        headers: { 'Authorization': 'Bearer ' + token },
       });
       if (!res.ok) return null;
       const data = await res.json();
       return {
-        artist: data.artists.map(a => a.name).join(', '),
-        title:  data.name,
-        year:   data.album.release_date.slice(0, 4),
+        artist:  data.artists.map(a => a.name).join(', '),
+        title:   data.name,
+        year:    data.album.release_date.slice(0, 4),
+        yearNum: parseInt(data.album.release_date.slice(0, 4)),
       };
-    } catch (_) {
-      return null;
+    } catch (_) { return null; }
+  }
+
+  // ─── QR SCANNER ─────────────────────────────────────────────
+  function startScanner() {
+    const btn   = document.getElementById('btn-start-scan');
+    const video = document.getElementById('qr-video');
+    const frame = document.getElementById('scan-frame-static');
+
+    btn.style.display   = 'none';
+    frame.style.display = 'none';
+    video.style.display = '';
+
+    if (qrScanner) { qrScanner.start(); return; }
+
+    qrScanner = new QrScanner(video, r => handleQR(r.data || r), {
+      highlightScanRegion: true,
+      highlightCodeOutline: true,
+    });
+    qrScanner.start();
+  }
+
+  function handleQR(raw) {
+    const urlMatch = raw.match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/);
+    const uriMatch = raw.match(/spotify:track:([A-Za-z0-9]+)/);
+    const trackId  = urlMatch?.[1] ?? uriMatch?.[1];
+
+    if (!trackId) {
+      showScanMsg('Geen Spotify track herkend: ' + raw, true);
+      return;
+    }
+
+    showScanMsg('Track gevonden — laden…', false);
+    qrScanner.stop();
+
+    fetchTrack(trackId).then(t => { currentTrack = t; });
+    playTrack('spotify:track:' + trackId);
+  }
+
+  // ─── PLAYBACK ───────────────────────────────────────────────
+  async function playTrack(uri, retries = 3) {
+    if (!deviceId) {
+      showScanMsg('Spotify speler nog niet klaar. Wacht even.', true);
+      return;
+    }
+
+    const wait = 1000 - (Date.now() - (deviceReadyTime || 0));
+    if (wait > 0) await new Promise(r => setTimeout(r, wait));
+
+    const token = localStorage.getItem('access_token');
+    if (!token) { localStorage.removeItem('access_token'); location.reload(); return; }
+
+    let res;
+    try {
+      res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ uris: [uri] }),
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      });
+    } catch (err) {
+      showScanMsg('Netwerkfout: ' + err.message, true);
+      return;
+    }
+
+    if (res.status === 204) {
+      showGameScreen();
+      return;
+    }
+
+    let errMsg = `HTTP ${res.status}`;
+    try {
+      const text = await res.text();
+      if (text) {
+        try { const b = JSON.parse(text); if (b.error) errMsg = `${b.error.status}: ${b.error.message}`; }
+        catch (_) { errMsg = `HTTP ${res.status}: ${text}`; }
+      }
+    } catch (_) {}
+
+    if ((res.status === 404 || res.status >= 500) && retries > 0) {
+      setStatus(`Wachten op device… opnieuw proberen`);
+      await new Promise(r => setTimeout(r, 1000));
+      return playTrack(uri, retries - 1);
+    }
+
+    if (res.status === 401) {
+      localStorage.removeItem('access_token');
+      setTimeout(() => location.reload(), 2000);
+      return;
+    }
+
+    showScanMsg('Spotify fout: ' + errMsg, true);
+  }
+
+  // ─── GAME SCREEN ────────────────────────────────────────────
+  function showGameScreen() {
+    hide('screen-scan');
+
+    selectedSlot = null;
+    isPlaying    = true;
+
+    const art = document.getElementById('album-art');
+    art.className   = 'album-art playing';
+    art.textContent = '🎵';
+
+    document.getElementById('status-dot').className = 'status-dot playing';
+    document.getElementById('playback-status').textContent = 'Aan het spelen';
+    document.getElementById('toggle-btn').textContent = '⏸ Pauzeren';
+    document.getElementById('btn-verify').disabled = true;
+    document.getElementById('timeline-label').textContent = 'Jouw tijdlijn — kies een plek';
+
+    // Show mode hint for Pro/Expert
+    const cfg = MODES[mode];
+    const hint = document.getElementById('track-hint');
+    if (cfg.extra) {
+      hint.innerHTML = `Noem ook: <strong>${cfg.extra}</strong>`;
+      hint.style.display = '';
+    } else {
+      hint.style.display = 'none';
+    }
+
+    buildWaveform();
+    setWaveformActive(true);
+    updateTokenUI();
+    renderTimeline(true);
+
+    showState('playing');
+    show('screen-game');
+  }
+
+  function togglePlay() {
+    if (isPlaying) {
+      player.pause().then(() => {
+        isPlaying = false;
+        document.getElementById('album-art').classList.remove('playing');
+        document.getElementById('status-dot').className = 'status-dot paused';
+        document.getElementById('playback-status').textContent = 'Gepauzeerd';
+        document.getElementById('toggle-btn').textContent = '▶ Doorgaan';
+        setWaveformActive(false);
+      });
+    } else {
+      player.resume().then(() => {
+        isPlaying = true;
+        document.getElementById('album-art').classList.add('playing');
+        document.getElementById('status-dot').className = 'status-dot playing';
+        document.getElementById('playback-status').textContent = 'Aan het spelen';
+        document.getElementById('toggle-btn').textContent = '⏸ Pauzeren';
+        setWaveformActive(true);
+      });
     }
   }
 
-  // ─── WAVEFORM ──────────────────────────────────────────────
+  // ─── SLOT SELECTION ─────────────────────────────────────────
+  function selectSlot(i) {
+    selectedSlot = i;
+    renderTimeline(true);
+    document.getElementById('btn-verify').disabled = false;
+    document.getElementById('btn-trade').style.display =
+      tokens >= 3 ? '' : 'none';
+  }
+
+  // ─── TOKEN ACTIONS ──────────────────────────────────────────
+  function skipCard() {
+    if (tokens <= 0) return;
+    tokens--;
+    currentTrack = null;
+    hide('screen-game');
+
+    resetScanScreen();
+    show('screen-scan');
+    startScanner();
+  }
+
+  function tradeTokens() {
+    if (tokens < 3 || selectedSlot === null) return;
+    tokens -= 3;
+    // Force-correct placement without verification
+    if (currentTrack) {
+      timeline.splice(selectedSlot, 0, {
+        title: currentTrack.title, artist: currentTrack.artist,
+        year: currentTrack.year, yearNum: currentTrack.yearNum,
+      });
+      correctCount++;
+      updateProgress();
+    }
+    showResult(true, true);
+  }
+
+  function updateTokenUI() {
+    const cfg = MODES[mode];
+    const max = cfg.tokens;
+    const dots = document.getElementById('token-dots');
+    dots.innerHTML = '';
+    for (let i = 0; i < max; i++) {
+      const d = document.createElement('div');
+      d.className = 'token-dot' + (i >= tokens ? ' spent' : '');
+      dots.appendChild(d);
+    }
+    document.getElementById('btn-skip').disabled = tokens <= 0;
+  }
+
+  // ─── VERIFY ─────────────────────────────────────────────────
+  function pauseForVerify() {
+    if (isPlaying) {
+      player.pause();
+      isPlaying = false;
+      document.getElementById('album-art').classList.remove('playing');
+      document.getElementById('status-dot').className = 'status-dot paused';
+      document.getElementById('playback-status').textContent = 'Gepauzeerd';
+      setWaveformActive(false);
+    }
+  }
+
+  function onVerify() {
+    if (selectedSlot === null) return;
+    pauseForVerify();
+
+    if (!currentTrack) {
+      // No metadata — skip to result with unknown outcome
+      showResult(false, false);
+      return;
+    }
+
+    const prev = timeline[selectedSlot - 1]?.yearNum ?? -Infinity;
+    const next = timeline[selectedSlot]?.yearNum     ?? Infinity;
+    placementOk = currentTrack.yearNum >= prev && currentTrack.yearNum <= next;
+
+    const cfg = MODES[mode];
+    if (cfg.extra) {
+      // Pro/Expert: show track info + ask about extra knowledge
+      document.getElementById('extra-artist').textContent = currentTrack.artist;
+      document.getElementById('extra-title').textContent  = currentTrack.title;
+      document.getElementById('extra-year').textContent   = currentTrack.year;
+      document.getElementById('extra-placement-msg').textContent = placementOk
+        ? '✓ Plaatsing correct'
+        : `✗ Plaatsing fout — juiste jaar: ${currentTrack.year}`;
+      document.getElementById('extra-placement-msg').style.color = placementOk
+        ? 'var(--green)' : 'var(--accent)';
+      document.getElementById('extra-question').innerHTML =
+        `Kende je ook de <span>${cfg.extra}</span>?`;
+      showState('extra');
+    } else {
+      // Normaal: placement is the only check
+      if (placementOk) {
+        timeline.splice(selectedSlot, 0, {
+          title: currentTrack.title, artist: currentTrack.artist,
+          year: currentTrack.year, yearNum: currentTrack.yearNum,
+        });
+        correctCount++;
+        updateProgress();
+      }
+      showResult(placementOk, false);
+    }
+  }
+
+  function answerExtra(knew) {
+    const ok = placementOk && knew;
+    if (ok) {
+      timeline.splice(selectedSlot, 0, {
+        title: currentTrack.title, artist: currentTrack.artist,
+        year: currentTrack.year, yearNum: currentTrack.yearNum,
+      });
+      correctCount++;
+      updateProgress();
+    }
+    showResult(ok, false);
+  }
+
+  function showResult(ok, wasTraded) {
+    const hasTrack = !!currentTrack;
+
+    document.getElementById('result-icon').textContent  = ok ? '✓' : (hasTrack ? '✗' : '?');
+    document.getElementById('result-icon').style.color  = ok ? 'var(--green)' : (hasTrack ? 'var(--accent)' : 'var(--muted)');
+    document.getElementById('result-artist').textContent = hasTrack ? currentTrack.artist : '';
+    document.getElementById('result-title').textContent  = hasTrack ? currentTrack.title  : 'Info niet beschikbaar';
+    document.getElementById('result-year').textContent   = hasTrack ? currentTrack.year   : '';
+
+    let msg = '';
+    if (wasTraded) {
+      msg = 'Gratis geplaatst via tokens.';
+    } else if (!hasTrack) {
+      msg = 'Geen trackinfo — controleer het kaartje.';
+    } else if (ok) {
+      msg = 'Goed! Kaartje toegevoegd aan je tijdlijn.';
+    } else {
+      const cfg = MODES[mode];
+      if (!placementOk) {
+        msg = `Verkeerde plek — juiste jaar is ${currentTrack.year}.`;
+      } else {
+        msg = `Plaatsing goed, maar ${cfg.extra} klopte niet.`;
+      }
+    }
+    document.getElementById('result-msg').textContent = msg;
+    document.getElementById('result-card').className  = 'result-card ' + (ok ? 'result-correct' : 'result-wrong');
+
+    // Render timeline read-only
+    const container = document.getElementById('timeline-result');
+    container.innerHTML = '';
+    if (timeline.length === 0) {
+      const p = document.createElement('p');
+      p.style.cssText = 'font-size:12px;color:var(--muted);text-align:center;padding:12px 0';
+      p.textContent = 'Nog geen kaartjes geplaatst';
+      container.appendChild(p);
+    } else {
+      timeline.forEach(item => container.appendChild(makeCardEl(item)));
+    }
+
+    const won = correctCount >= TARGET;
+    const nextBtn = document.getElementById('btn-next');
+    if (won) {
+      nextBtn.textContent = '🎉 Gewonnen! Nieuw spel';
+      nextBtn.onclick = winGame;
+    } else {
+      nextBtn.textContent = 'Volgende kaartje →';
+      nextBtn.onclick = nextRound;
+    }
+
+    showState('result');
+  }
+
+  // ─── NEXT ROUND / WIN ───────────────────────────────────────
+  function nextRound() {
+    round++;
+    currentTrack = null;
+    selectedSlot = null;
+    document.getElementById('round-display').textContent = round;
+
+    hide('screen-game');
+    resetScanScreen();
+    show('screen-scan');
+    startScanner();
+  }
+
+  function winGame() {
+    timeline     = [];
+    correctCount = 0;
+    round        = 1;
+    currentTrack = null;
+    hide('screen-game');
+    show('screen-mode');
+  }
+
+  // ─── PROGRESS ───────────────────────────────────────────────
+  function updateProgress() {
+    document.getElementById('correct-count').textContent  = correctCount;
+    document.getElementById('progress-fill').style.width  = (correctCount / TARGET * 100) + '%';
+    updateTokenUI();
+  }
+
+  // ─── TIMELINE RENDER ────────────────────────────────────────
+  function renderTimeline(interactive) {
+    const c = document.getElementById('timeline');
+    c.innerHTML = '';
+
+    if (timeline.length === 0 && interactive) {
+      c.appendChild(makeSlotEl(0));
+      return;
+    }
+
+    if (interactive) c.appendChild(makeSlotEl(0));
+
+    timeline.forEach((item, i) => {
+      c.appendChild(makeCardEl(item));
+      if (interactive) c.appendChild(makeSlotEl(i + 1));
+    });
+
+    if (!interactive && timeline.length === 0) {
+      const p = document.createElement('p');
+      p.style.cssText = 'font-size:12px;color:var(--muted);text-align:center;padding:12px 0';
+      p.textContent   = 'Nog geen kaartjes geplaatst';
+      c.appendChild(p);
+    }
+  }
+
+  function makeSlotEl(i) {
+    const btn = document.createElement('button');
+    btn.className = 'timeline-slot-btn' + (selectedSlot === i ? ' selected' : '');
+    const prev = timeline[i - 1]?.yearNum;
+    const next = timeline[i]?.yearNum;
+    if (!prev && !next)  btn.textContent = '+ Zet hier als eerste kaartje';
+    else if (!prev)      btn.textContent = `+ Zet hier  (vóór ${next})`;
+    else if (!next)      btn.textContent = `+ Zet hier  (na ${prev})`;
+    else                 btn.textContent = `+ Zet hier  (${prev} – ${next})`;
+    btn.onclick = () => selectSlot(i);
+    return btn;
+  }
+
+  function makeCardEl(item) {
+    const div = document.createElement('div');
+    div.className = 'timeline-card-item';
+    div.innerHTML = `
+      <div class="timeline-card-info">
+        <div class="timeline-card-artist">${item.artist}</div>
+        <div class="timeline-card-title">${item.title}</div>
+      </div>
+      <div class="timeline-card-year">${item.year}</div>`;
+    return div;
+  }
+
+  // ─── WAVEFORM ───────────────────────────────────────────────
   function buildWaveform() {
     const wf = document.getElementById('waveform');
     wf.innerHTML = '';
@@ -1289,527 +1206,37 @@
   }
 
   function setWaveformActive(on) {
-    document.querySelectorAll('.wave-bar').forEach(b => {
-      if (on) b.classList.add('active');
-      else b.classList.remove('active');
-    });
+    document.getElementById('waveform').querySelectorAll('.wave-bar')
+      .forEach(b => b.classList.toggle('active', on));
   }
 
-  // ─── QR SCANNER ────────────────────────────────────────────
-  function startScanner() {
-    const btn        = document.getElementById('btn-start-scan');
-    const video      = document.getElementById('qr-video');
-    const frameStatic = document.getElementById('scan-frame-static');
-
-    btn.style.display        = 'none';
-    frameStatic.style.display = 'none';
-    video.style.display      = '';
-
-    if (qrScanner) {
-      qrScanner.start();
-      return;
-    }
-
-    qrScanner = new QrScanner(video, result => handleQRResult(result.data || result), {
-      highlightScanRegion: true,
-      highlightCodeOutline: true,
-    });
-    qrScanner.start();
+  // ─── HELPERS ────────────────────────────────────────────────
+  function showState(s) {
+    ['playing','extra','result'].forEach(id =>
+      document.getElementById('state-' + id).style.display = (id === s ? '' : 'none')
+    );
   }
 
-  function handleQRResult(raw) {
-    let trackId = null;
+  function show(id)  { document.getElementById(id).style.display = ''; }
+  function hide(id)  { document.getElementById(id).style.display = 'none'; }
 
-    const urlMatch = raw.match(/open\.spotify\.com\/track\/([A-Za-z0-9]+)/);
-    const uriMatch = raw.match(/spotify:track:([A-Za-z0-9]+)/);
+  function setStatus(msg) { document.getElementById('player-status').textContent = msg; }
 
-    if (urlMatch)      trackId = urlMatch[1];
-    else if (uriMatch) trackId = uriMatch[1];
-
-    if (!trackId) {
-      showScanResult('Geen Spotify track herkend: ' + raw, true);
-      return;
-    }
-
-    showScanResult('Track gevonden — laden…', false);
-    qrScanner.stop();
-
-    // Fetch metadata in parallel so it doesn't delay the play command
-    fetchTrack(trackId).then(track => { currentTrack = track; });
-    playTrack('spotify:track:' + trackId);
-  }
-
-  // ─── PLAYBACK ──────────────────────────────────────────────
-  async function playTrack(uri, retries = 3) {
-    if (!deviceId) {
-      showError('Spotify speler nog niet klaar. Wacht even en probeer opnieuw.');
-      return;
-    }
-
-    const msSinceReady = Date.now() - (deviceReadyTime || 0);
-    if (msSinceReady < 1000) {
-      await new Promise(r => setTimeout(r, 1000 - msSinceReady));
-    }
-
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      showError('Geen access token gevonden. Log opnieuw in.');
-      localStorage.removeItem('access_token');
-      setTimeout(() => location.reload(), 2000);
-      return;
-    }
-
-    console.log('[Beatster] playTrack', uri, 'device:', deviceId, 'retries left:', retries);
-
-    let res;
-    try {
-      res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-        method: 'PUT',
-        body: JSON.stringify({ uris: [uri] }),
-        headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
-        }
-      });
-    } catch (err) {
-      showError('Netwerkfout: ' + err.message);
-      return;
-    }
-
-    console.log('[Beatster] play response status:', res.status);
-
-    if (res.status === 204) {
-      if (difficulty === 'hitster') {
-        showHitsterScreen();
-      } else {
-        showPlayingScreen();
-        startCountdown();
-      }
-      return;
-    }
-
-    let errMsg = `HTTP ${res.status}`;
-    try {
-      const text = await res.text();
-      console.error('[Beatster] Spotify error raw:', res.status, text);
-      if (text) {
-        try {
-          const body = JSON.parse(text);
-          if (body.error) errMsg = `${body.error.status}: ${body.error.message}`;
-          else errMsg = `HTTP ${res.status}: ${text}`;
-        } catch (_) {
-          errMsg = `HTTP ${res.status}: ${text}`;
-        }
-      }
-    } catch (_) {}
-
-    if ((res.status === 404 || res.status >= 500) && retries > 0) {
-      setStatus(`Wachten op device (${errMsg}), opnieuw proberen…`);
-      await new Promise(r => setTimeout(r, 1000));
-      return playTrack(uri, retries - 1);
-    }
-
-    if (res.status === 401) {
-      showError('Token verlopen — opnieuw inloggen.');
-      localStorage.removeItem('access_token');
-      setTimeout(() => location.reload(), 2000);
-      return;
-    }
-
-    showError('Spotify fout: ' + errMsg);
-  }
-
-  function resumePlayback() {
-    player.resume().then(() => {
-      bonusOnReveal = false;
-      hide('bonus-banner');
-      hide('ctrl-paused');
-      show('ctrl-playing');
-      setPlaybackStatus('Aan het spelen');
-      document.getElementById('album-art').classList.add('playing');
-      document.getElementById('status-dot').className = 'status-dot playing';
-      setWaveformActive(true);
-    });
-  }
-
-  // ─── COUNTDOWN ─────────────────────────────────────────────
-  function startCountdown() {
-    const duration = 3000;
-    const start    = Date.now();
-    const fill     = document.getElementById('countdown-bar-fill');
-    const num      = document.getElementById('countdown-num');
-
-    show('countdown-wrap');
-    show('ctrl-countdown');
-    fill.style.width = '100%';
-
-    clearInterval(countdownInterval);
-    countdownInterval = setInterval(() => {
-      const remaining = Math.max(0, duration - (Date.now() - start));
-      fill.style.width = (remaining / duration * 100) + '%';
-      num.textContent  = Math.ceil(remaining / 1000);
-
-      if (remaining <= 0) {
-        clearInterval(countdownInterval);
-        autoPause();
-      }
-    }, 50);
-  }
-
-  function autoPause() {
-    player.pause().then(() => {
-      bonusOnReveal = true;
-      hide('countdown-wrap');
-      hide('ctrl-countdown');
-      show('bonus-banner');
-      show('ctrl-paused');
-      setPlaybackStatus('Gepauzeerd');
-      document.getElementById('album-art').classList.remove('playing');
-      document.getElementById('status-dot').className = 'status-dot paused';
-      setWaveformActive(false);
-    });
-  }
-
-  function skipBonus() {
-    clearInterval(countdownInterval);
-    bonusOnReveal = false;
-    hide('countdown-wrap');
-    hide('ctrl-countdown');
-    show('ctrl-playing');
-  }
-
-  // ─── REVEAL ────────────────────────────────────────────────
-  function revealAndPause(withBonus) {
-    clearInterval(countdownInterval);
-    bonusOnReveal = withBonus && bonusOnReveal;
-
-    player.pause().then(() => {
-      hide('countdown-wrap');
-      hide('bonus-banner');
-      hide('ctrl-countdown');
-      hide('ctrl-paused');
-      hide('ctrl-playing');
-
-      document.getElementById('info-hidden').style.display = 'none';
-
-      const cfg = DIFFICULTY[difficulty];
-      const pts = bonusOnReveal ? cfg.bonusPoints : cfg.basePoints;
-
-      if (currentTrack) {
-        document.getElementById('meta-artist').textContent = currentTrack.artist;
-        document.getElementById('meta-title').textContent  = currentTrack.title;
-        document.getElementById('meta-year').textContent   = currentTrack.year;
-      } else {
-        document.getElementById('meta-artist').textContent = '';
-        document.getElementById('meta-title').textContent  = 'Info niet beschikbaar';
-        document.getElementById('meta-year').textContent   = '';
-      }
-
-      document.getElementById('info-revealed').style.display = 'block';
-      document.getElementById('album-art').classList.remove('playing');
-      document.getElementById('status-dot').className = 'status-dot paused';
-      setWaveformActive(false);
-
-      const bonusLabel = bonusOnReveal ? ' (bonus!)' : '';
-      document.getElementById('btn-correct').textContent =
-        `✓ Goed geraden! (+${pts} pt${bonusLabel})`;
-
-      show('ctrl-revealed');
-      setPlaybackStatus('Gepauzeerd — zie het antwoord!');
-    });
-  }
-
-  // ─── SCORING ───────────────────────────────────────────────
-  function awardPoints(correct) {
-    const cfg = DIFFICULTY[difficulty];
-    if (correct) {
-      score  += bonusOnReveal ? cfg.bonusPoints : cfg.basePoints;
-      streak += 1;
-    } else {
-      streak = 0;
-    }
-    document.getElementById('score-total').textContent  = score;
-    document.getElementById('score-streak').textContent = streak;
-    hide('ctrl-revealed');
-    show('ctrl-next');
-    setPlaybackStatus('—');
-  }
-
-  function nextRound() {
-    round += 1;
-    document.getElementById('round-display').textContent = round;
-    hide('ctrl-next');
-    hide('screen-playing');
-
-    // Reset scan screen
-    const result = document.getElementById('scan-result');
-    result.style.display = 'none';
-    result.textContent   = '';
-    result.style.color   = '';
-
-    currentTrack = null;
-    show('screen-scan');
-    startScanner();
-  }
-
-  // ─── PLAYING SCREEN SETUP ──────────────────────────────────
-  function showPlayingScreen() {
-    hide('screen-scan');
-
-    ['ctrl-countdown','ctrl-paused','ctrl-playing','ctrl-revealed','ctrl-next'].forEach(hide);
-    hide('countdown-wrap');
-    hide('bonus-banner');
-
-    const cfg = DIFFICULTY[difficulty];
-    document.getElementById('hint-label').textContent = cfg.hint;
-    document.getElementById('bonus-pts-display').textContent = '+' + cfg.bonusPoints;
-    document.getElementById('btn-reveal-countdown').textContent = `Onthullen (bonus: +${cfg.bonusPoints} pt)`;
-    document.getElementById('btn-reveal-paused').textContent   = `Onthullen (bonus: +${cfg.bonusPoints} pt)`;
-
-    document.getElementById('info-hidden').style.display  = 'block';
-    document.getElementById('info-revealed').style.display = 'none';
-    document.getElementById('album-art').className        = 'album-art playing';
-    document.getElementById('album-art').textContent      = '🎵';
-    document.getElementById('status-dot').className       = 'status-dot playing';
-    document.getElementById('score-round-display').textContent = round;
-
-    buildWaveform();
-    setWaveformActive(true);
-    setPlaybackStatus('Aan het spelen');
-    show('screen-playing');
-  }
-
-  // ─── HITSTER ────────────────────────────────────────────────
-  function showHitsterScreen() {
-    hide('screen-scan');
-    hide('hitster-result');
-
-    hitsterSlot    = null;
-    hitsterPlaying = true;
-
-    const art = document.getElementById('hitster-album-art');
-    art.className   = 'album-art playing';
-    art.textContent = '🎵';
-    document.getElementById('hitster-status-dot').className     = 'status-dot playing';
-    document.getElementById('hitster-playback-status').textContent = 'Aan het spelen';
-    document.getElementById('hitster-toggle-btn').textContent   = '⏸ Pauzeren';
-    document.getElementById('btn-hitster-verify').disabled      = true;
-    document.getElementById('timeline-label').textContent       = 'Jouw tijdlijn — kies een plek';
-
-    show('hitster-playing-controls');
-    document.getElementById('btn-hitster-verify').style.display = '';
-
-    buildHitsterWaveform();
-    setHitsterWaveformActive(true);
-    renderTimeline(true);
-    show('screen-hitster');
-  }
-
-  function hitsterTogglePlay() {
-    if (hitsterPlaying) {
-      player.pause().then(() => {
-        hitsterPlaying = false;
-        document.getElementById('hitster-toggle-btn').textContent = '▶ Doorgaan';
-        document.getElementById('hitster-album-art').classList.remove('playing');
-        document.getElementById('hitster-status-dot').className  = 'status-dot paused';
-        document.getElementById('hitster-playback-status').textContent = 'Gepauzeerd';
-        setHitsterWaveformActive(false);
-      });
-    } else {
-      player.resume().then(() => {
-        hitsterPlaying = true;
-        document.getElementById('hitster-toggle-btn').textContent = '⏸ Pauzeren';
-        document.getElementById('hitster-album-art').classList.add('playing');
-        document.getElementById('hitster-status-dot').className  = 'status-dot playing';
-        document.getElementById('hitster-playback-status').textContent = 'Aan het spelen';
-        setHitsterWaveformActive(true);
-      });
-    }
-  }
-
-  function selectSlot(index) {
-    hitsterSlot = index;
-    renderTimeline(true);
-    document.getElementById('btn-hitster-verify').disabled = false;
-  }
-
-  function renderTimeline(interactive) {
-    const container = document.getElementById('hitster-timeline');
-    container.innerHTML = '';
-
-    if (interactive) container.appendChild(makeSlotEl(0));
-
-    hitsterTimeline.forEach((item, i) => {
-      container.appendChild(makeTimelineCardEl(item));
-      if (interactive) container.appendChild(makeSlotEl(i + 1));
-    });
-
-    if (!interactive && hitsterTimeline.length === 0) {
-      const empty = document.createElement('p');
-      empty.style.cssText = 'font-size:12px;color:var(--muted);text-align:center;padding:12px 0';
-      empty.textContent   = 'Nog geen kaartjes geplaatst';
-      container.appendChild(empty);
-    }
-  }
-
-  function makeSlotEl(index) {
-    const btn = document.createElement('button');
-    btn.className = 'timeline-slot-btn' + (hitsterSlot === index ? ' selected' : '');
-
-    const prev = hitsterTimeline[index - 1]?.yearNum;
-    const next = hitsterTimeline[index]?.yearNum;
-
-    if (!prev && !next)  btn.textContent = '+ Zet hier als eerste kaartje';
-    else if (!prev)      btn.textContent = `+ Zet hier  (vóór ${next})`;
-    else if (!next)      btn.textContent = `+ Zet hier  (na ${prev})`;
-    else                 btn.textContent = `+ Zet hier  (${prev} – ${next})`;
-
-    btn.onclick = () => selectSlot(index);
-    return btn;
-  }
-
-  function makeTimelineCardEl(item) {
-    const div = document.createElement('div');
-    div.className = 'timeline-card-item';
-    div.innerHTML = `
-      <div class="timeline-card-info">
-        <div class="timeline-card-artist">${item.artist}</div>
-        <div class="timeline-card-title">${item.title}</div>
-      </div>
-      <div class="timeline-card-year">${item.year}</div>`;
-    return div;
-  }
-
-  function hitsterVerify() {
-    if (hitsterSlot === null) return;
-
-    // Pause playback
-    if (hitsterPlaying) {
-      player.pause();
-      hitsterPlaying = false;
-      document.getElementById('hitster-album-art').classList.remove('playing');
-      document.getElementById('hitster-status-dot').className = 'status-dot paused';
-      setHitsterWaveformActive(false);
-    }
-
-    hide('hitster-playing-controls');
-    document.getElementById('btn-hitster-verify').style.display = 'none';
-
-    let correct = false;
-
-    if (currentTrack) {
-      const yearNum = parseInt(currentTrack.year);
-      const prev    = hitsterTimeline[hitsterSlot - 1]?.yearNum ?? -Infinity;
-      const next    = hitsterTimeline[hitsterSlot]?.yearNum ?? Infinity;
-      correct       = yearNum >= prev && yearNum <= next;
-
-      if (correct) {
-        hitsterTimeline.splice(hitsterSlot, 0, {
-          title: currentTrack.title, artist: currentTrack.artist,
-          year: currentTrack.year,   yearNum,
-        });
-        hitsterCorrect++;
-        document.getElementById('hitster-correct').textContent = hitsterCorrect;
-      }
-
-      document.getElementById('hitster-result-icon').textContent = correct ? '✓' : '✗';
-      document.getElementById('hitster-result-icon').style.color = correct ? 'var(--green)' : 'var(--accent)';
-      document.getElementById('hitster-meta-artist').textContent = currentTrack.artist;
-      document.getElementById('hitster-meta-title').textContent  = currentTrack.title;
-      document.getElementById('hitster-meta-year').textContent   = currentTrack.year;
-      document.getElementById('hitster-result-text').textContent = correct
-        ? 'Goed geplaatst! Kaartje toegevoegd aan je tijdlijn.'
-        : `Helaas — dit was ${currentTrack.year}. Kaartje gaat terug.`;
-    } else {
-      document.getElementById('hitster-result-icon').textContent = '?';
-      document.getElementById('hitster-result-icon').style.color = 'var(--muted)';
-      document.getElementById('hitster-meta-artist').textContent = '';
-      document.getElementById('hitster-meta-title').textContent  = 'Info niet beschikbaar';
-      document.getElementById('hitster-meta-year').textContent   = '';
-      document.getElementById('hitster-result-text').textContent = 'Kon trackinfo niet laden — controleer het kaartje zelf.';
-    }
-
-    document.getElementById('hitster-result-card').className =
-      'hitster-result-card ' + (correct ? 'result-correct' : 'result-wrong');
-    document.getElementById('timeline-label').textContent = 'Jouw tijdlijn';
-    renderTimeline(false);
-
-    const won = hitsterCorrect >= HITSTER_TARGET;
-    const nextBtn = document.getElementById('hitster-next-btn');
-    nextBtn.textContent = won ? '🎉 Gewonnen! Nieuw spel' : 'Volgende kaartje →';
-    nextBtn.onclick     = won ? hitsterWin : hitsterNextRound;
-
-    show('hitster-result');
-  }
-
-  function hitsterNextRound() {
-    round++;
-    currentTrack = null;
-    hitsterSlot  = null;
-
-    hide('screen-hitster');
-
-    const result = document.getElementById('scan-result');
-    result.style.display = 'none';
-    result.textContent   = '';
-    result.style.color   = '';
-    document.getElementById('round-display').textContent = round;
-
-    show('screen-scan');
-    startScanner();
-  }
-
-  function hitsterWin() {
-    hitsterTimeline = [];
-    hitsterCorrect  = 0;
-    round = 1;
-    currentTrack = null;
-    hide('screen-hitster');
-    show('screen-difficulty');
-  }
-
-  function buildHitsterWaveform() {
-    const wf = document.getElementById('hitster-waveform');
-    wf.innerHTML = '';
-    const heights = [8,14,20,16,10,18,22,12,8,16,20,14,10,18,12];
-    const speeds  = ['0.4s','0.6s','0.5s','0.7s','0.45s','0.55s','0.65s','0.5s','0.4s','0.6s','0.5s','0.7s','0.45s','0.55s','0.65s'];
-    heights.forEach((h, i) => {
-      const b = document.createElement('div');
-      b.className = 'wave-bar';
-      b.style.height = h + 'px';
-      b.style.setProperty('--spd', speeds[i]);
-      wf.appendChild(b);
-    });
-  }
-
-  function setHitsterWaveformActive(on) {
-    document.getElementById('hitster-waveform').querySelectorAll('.wave-bar').forEach(b => {
-      b.classList.toggle('active', on);
-    });
-  }
-
-  // ─── UI HELPERS ────────────────────────────────────────────
-  function show(id) { document.getElementById(id).style.display = ''; }
-  function hide(id) { document.getElementById(id).style.display = 'none'; }
-
-  function showError(msg) {
-    console.error('[Beatster]', msg);
-    showScanResult(msg, true);
-  }
-
-  function showScanResult(msg, isError) {
+  function showScanMsg(msg, isError) {
     const el = document.getElementById('scan-result');
-    el.style.display  = '';
-    el.style.color    = isError ? '#ff4d6d' : 'var(--muted)';
-    el.textContent    = msg;
+    el.style.display = '';
+    el.style.color   = isError ? '#ff4d6d' : 'var(--muted)';
+    el.textContent   = msg;
   }
 
-  function setStatus(msg) {
-    document.getElementById('player-status').textContent = msg;
-  }
-
-  function setPlaybackStatus(msg) {
-    document.getElementById('playback-status').textContent = msg;
+  function resetScanScreen() {
+    document.getElementById('btn-start-scan').style.display   = '';
+    document.getElementById('qr-video').style.display         = 'none';
+    document.getElementById('scan-frame-static').style.display = '';
+    const r = document.getElementById('scan-result');
+    r.style.display = 'none';
+    r.textContent   = '';
+    r.style.color   = '';
   }
 
 </script>
