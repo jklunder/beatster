@@ -35,72 +35,48 @@
 
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.025;
-      pointer-events: none;
-      z-index: 999;
+      opacity: 0.025; pointer-events: none; z-index: 999;
     }
 
     /* ── HEADER ── */
     header {
-      width: 100%;
-      max-width: 480px;
+      width: 100%; max-width: 480px;
       padding: 28px 24px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
     }
-
     .logo-img { height: 48px; width: auto; object-fit: contain; }
-
     .spotify-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--green);
-      background: rgba(29,185,84,0.1);
-      border: 1px solid rgba(29,185,84,0.25);
-      padding: 5px 10px;
-      border-radius: 20px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--green);
+      background: rgba(29,185,84,0.1); border: 1px solid rgba(29,185,84,0.25);
+      padding: 5px 10px; border-radius: 20px;
     }
-
     .btn-logout {
       background: none; border: none; color: var(--muted);
       font-size: 11px; cursor: pointer; padding: 4px 8px;
       border-radius: 12px; letter-spacing: 0.5px; transition: color 0.2s;
     }
     .btn-logout:hover { color: var(--text); }
-
     .spotify-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green);
+      width: 6px; height: 6px; border-radius: 50%; background: var(--green);
       animation: pulse 2s ease-in-out infinite;
     }
-
-    @keyframes pulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
+    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.8); } }
 
     /* ── MAIN ── */
     main { width: 100%; max-width: 480px; padding: 24px; flex: 1; }
-
-    .screen { display: flex; flex-direction: column; gap: 16px; }
+    .screen { display: flex; flex-direction: column; gap: 12px; }
 
     /* ── LOGIN ── */
     .login-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 48px 24px;
-      display: flex; flex-direction: column; align-items: center;
-      gap: 20px; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center;
     }
     .login-icon { font-size: 56px; opacity: 0.7; }
-    .login-card h2 {
-      font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px;
-    }
+    .login-card h2 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; }
     .login-card p { font-size: 14px; color: var(--muted); line-height: 1.5; }
 
     /* ── MODE SCREEN ── */
@@ -108,9 +84,7 @@
       font-family: 'Bebas Neue', sans-serif;
       font-size: 22px; letter-spacing: 2px; text-align: center;
     }
-
     .mode-grid { display: flex; flex-direction: column; gap: 12px; }
-
     .mode-card {
       background: var(--surface); border: 2px solid var(--border);
       border-radius: var(--radius); padding: 18px 20px; cursor: pointer;
@@ -119,19 +93,21 @@
     }
     .mode-card:hover { border-color: rgba(255,180,0,0.35); background: rgba(255,180,0,0.04); }
     .mode-card.selected { border-color: var(--gold); background: rgba(255,180,0,0.08); }
-
     .mode-icon { font-size: 26px; width: 40px; text-align: center; flex-shrink: 0; }
-
     .mode-info { flex: 1; }
-    .mode-name {
-      font-family: 'Bebas Neue', sans-serif; font-size: 20px;
-      letter-spacing: 1.5px; color: var(--gold);
-    }
+    .mode-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1.5px; color: var(--gold); }
     .mode-hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
     .mode-meta { text-align: right; flex-shrink: 0; }
     .mode-meta-row { font-size: 11px; color: var(--muted); line-height: 1.7; }
     .mode-meta-row strong { color: var(--text); }
+
+    .bonus-info {
+      background: rgba(255,45,110,0.06); border: 1px solid rgba(255,45,110,0.15);
+      border-radius: 10px; padding: 12px 16px;
+      font-size: 13px; color: var(--muted); line-height: 1.5;
+    }
+    .bonus-info strong { color: var(--text); }
+    .bonus-info .accent { color: var(--accent); }
 
     /* ── SCAN SCREEN ── */
     .round-tag {
@@ -139,30 +115,25 @@
       gap: 8px; font-size: 12px; color: var(--muted);
       letter-spacing: 1px; text-transform: uppercase;
     }
-
     .scan-area {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 32px 24px;
       display: flex; flex-direction: column; align-items: center;
       gap: 20px; position: relative; overflow: hidden;
     }
-
     .scan-frame {
       width: 200px; height: 200px; position: relative;
       display: flex; align-items: center; justify-content: center;
     }
-
     .scan-frame::before, .scan-frame::after,
     .scan-frame .corner-bl, .scan-frame .corner-br {
-      content: ''; position: absolute;
-      width: 28px; height: 28px;
+      content: ''; position: absolute; width: 28px; height: 28px;
       border-color: var(--gold); border-style: solid;
     }
     .scan-frame::before { top:0; left:0; border-width:3px 0 0 3px; border-radius:4px 0 0 0; }
     .scan-frame::after  { top:0; right:0; border-width:3px 3px 0 0; border-radius:0 4px 0 0; }
     .scan-frame .corner-bl { bottom:0; left:0; border-width:0 0 3px 3px; border-radius:0 0 0 4px; }
     .scan-frame .corner-br { bottom:0; right:0; border-width:0 3px 3px 0; border-radius:0 0 4px 0; }
-
     .scan-line {
       position: absolute; left:10px; right:10px; height:2px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
@@ -175,43 +146,37 @@
       90%  { opacity:1; }
       100% { top:180px; opacity:0; }
     }
-
     .scan-icon { font-size: 48px; opacity: 0.2; }
     .scan-hint { font-size: 14px; color: var(--muted); text-align: center; line-height: 1.5; }
-
-    #qr-video {
-      width: 200px; height: 200px; object-fit: cover;
-      border-radius: 8px; border: 2px solid var(--gold);
-    }
-
+    #qr-video { width: 200px; height: 200px; object-fit: cover; border-radius: 8px; border: 2px solid var(--gold); }
     #scan-result { font-size: 11px; color: var(--muted); text-align: center; word-break: break-all; }
     #player-status { font-size: 12px; color: var(--muted); text-align: center; }
 
     /* ── BUTTONS ── */
     .btn-primary {
-      width: 100%; padding: 14px;
+      width: 100%; padding: 18px;
       background: var(--gold); color: #0d0d0f;
-      border: none; border-radius: 10px;
-      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+      border: none; border-radius: 12px;
+      font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 600;
       cursor: pointer; transition: transform 0.15s, opacity 0.15s; letter-spacing: 0.3px;
     }
     .btn-primary:hover { opacity: 0.88; }
     .btn-primary:active { transform: scale(0.98); }
 
     .btn-secondary {
-      width: 100%; padding: 13px;
+      width: 100%; padding: 16px;
       background: transparent; color: var(--text);
-      border: 1px solid var(--border); border-radius: 10px;
-      font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer;
+      border: 1px solid var(--border); border-radius: 12px;
+      font-family: 'DM Sans', sans-serif; font-size: 16px; cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
     }
     .btn-secondary:hover { border-color: rgba(255,255,255,0.2); background: var(--surface2); }
 
     .btn-green {
-      width: 100%; padding: 15px;
+      width: 100%; padding: 18px;
       background: var(--green); color: #fff;
-      border: none; border-radius: 10px;
-      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+      border: none; border-radius: 12px;
+      font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 600;
       cursor: pointer; transition: transform 0.15s, opacity 0.15s;
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
@@ -219,61 +184,96 @@
     .btn-green:active { transform: scale(0.98); }
 
     .btn-danger {
-      width: 100%; padding: 13px;
+      width: 100%; padding: 16px;
       background: transparent; color: var(--accent);
-      border: 1px solid rgba(255,45,110,0.3); border-radius: 10px;
-      font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer;
+      border: 1px solid rgba(255,45,110,0.3); border-radius: 12px;
+      font-family: 'DM Sans', sans-serif; font-size: 16px; cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
     }
     .btn-danger:hover { border-color: var(--accent); background: rgba(255,45,110,0.06); }
 
     button:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
 
-    /* ── TRACK CARD ── */
-    .track-card {
+    /* ── LISTEN CARD ── */
+    .listen-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 24px 20px;
-      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      border-radius: var(--radius); padding: 48px 24px 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 24px;
       position: relative; overflow: hidden;
     }
-    .track-card::before {
+    .listen-card::before {
       content: ''; position: absolute;
-      top:-60px; left:-60px; right:-60px; height:200px;
+      top: -60px; left: -60px; right: -60px; height: 200px;
       background: radial-gradient(ellipse at 50% 0%, rgba(255,180,0,0.07) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .track-status {
-      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
       color: var(--muted); display: flex; align-items: center; gap: 6px;
     }
-
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
     .status-dot.paused { background: var(--muted); animation: none; }
     .status-dot.playing { animation: pulse 1s ease-in-out infinite; }
 
-    .album-art {
-      width: 120px; height: 120px; border-radius: 10px;
-      background: var(--surface2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 48px; position: relative; overflow: hidden;
-    }
-    .album-art.playing::after {
-      content: ''; position: absolute; inset: 0;
-      background: rgba(255,180,0,0.05);
-      animation: albumPulse 1s ease-in-out infinite;
-    }
-    @keyframes albumPulse { 0%,100% { opacity:0; } 50% { opacity:1; } }
+    /* ── WAVEFORM ── */
+    .waveform { display: flex; align-items: center; gap: 4px; height: 60px; }
+    .wave-bar { width: 4px; border-radius: 3px; background: var(--gold); opacity: 0.35; }
+    .wave-bar.active { animation: waveAnim var(--spd) ease-in-out infinite alternate; opacity: 0.9; }
+    @keyframes waveAnim { from { transform: scaleY(0.12); } to { transform: scaleY(1); } }
 
-    .waveform { display: flex; align-items: center; gap: 3px; height: 20px; }
-    .wave-bar { width: 3px; border-radius: 2px; background: var(--gold); opacity: 0.5; }
-    .wave-bar.active { animation: waveAnim var(--spd) ease-in-out infinite alternate; }
-    @keyframes waveAnim { from { transform: scaleY(0.2); } to { transform: scaleY(1); } }
+    /* ── BONUS BUTTON ── */
+    .btn-bonus {
+      width: 100%; padding: 22px;
+      background: rgba(255,45,110,0.1); color: var(--accent);
+      border: 2px solid rgba(255,45,110,0.35); border-radius: 12px;
+      font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+    .btn-bonus:active { transform: scale(0.97); }
+    .btn-bonus.claimed {
+      background: rgba(255,45,110,0.18); border-color: var(--accent);
+      pointer-events: none;
+    }
 
+    .bonus-bar-wrap {
+      height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden;
+    }
+    .bonus-bar-fill {
+      height: 100%; background: var(--accent); border-radius: 2px; width: 100%;
+    }
+    .bonus-bar-fill.running {
+      animation: bonusCountdown 3s linear forwards;
+    }
+    @keyframes bonusCountdown { from { width: 100%; } to { width: 0%; } }
+
+    #bonus-zone {
+      display: flex; flex-direction: column; gap: 6px;
+      transition: opacity 0.4s ease;
+    }
+    #bonus-zone.fading { opacity: 0; pointer-events: none; }
+
+    /* ── PLACING CARD ── */
+    .placing-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 40px 24px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      text-align: center;
+    }
+    .placing-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px; letter-spacing: 2px; color: var(--text);
+    }
+    .bonus-active-badge {
+      font-size: 13px; color: var(--accent);
+      background: rgba(255,45,110,0.1); border: 1px solid rgba(255,45,110,0.25);
+      border-radius: 20px; padding: 5px 14px;
+    }
+
+    /* ── TRACK HINT ── */
     .track-hint {
-      font-size: 12px; color: var(--muted); text-align: center;
+      font-size: 14px; color: var(--muted); text-align: center;
       background: rgba(255,180,0,0.06); border: 1px solid rgba(255,180,0,0.15);
-      border-radius: 8px; padding: 8px 14px; line-height: 1.5;
+      border-radius: 10px; padding: 12px 16px; line-height: 1.5;
     }
     .track-hint strong { color: var(--gold); }
 
@@ -281,136 +281,81 @@
     .token-row {
       display: flex; align-items: center; justify-content: space-between;
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px 16px;
+      border-radius: 10px; padding: 10px 14px;
     }
-
     .token-left { display: flex; align-items: center; gap: 10px; }
-
     .token-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-
     .token-dots { display: flex; gap: 5px; }
-
-    .token-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--gold);
-    }
+    .token-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--gold); }
     .token-dot.spent { background: var(--surface2); border: 1px solid var(--border); }
-
     .btn-skip {
       font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500;
       background: transparent; color: var(--muted);
       border: 1px solid var(--border); border-radius: 8px;
-      padding: 6px 12px; cursor: pointer; transition: all 0.15s;
-      white-space: nowrap;
+      padding: 7px 12px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
     }
     .btn-skip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
     .btn-skip:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
 
-    /* ── TIMELINE ── */
-    .timeline-section { display: flex; flex-direction: column; gap: 8px; }
-
-    .timeline-label {
-      font-size: 11px; color: var(--muted);
-      letter-spacing: 1px; text-transform: uppercase;
-    }
-
-    .timeline-wrap {
-      display: flex; flex-direction: column; gap: 6px;
-      max-height: 240px; overflow-y: auto;
-    }
-
-    .timeline-slot-btn {
-      width: 100%; padding: 9px 14px;
-      border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;
-      background: transparent; color: var(--muted);
-      font-family: 'DM Sans', sans-serif; font-size: 12px;
-      cursor: pointer; transition: all 0.15s; text-align: left;
-    }
-    .timeline-slot-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(255,180,0,0.04); }
-    .timeline-slot-btn.selected { border-style: solid; border-color: var(--gold); color: var(--gold); background: rgba(255,180,0,0.1); font-weight: 500; }
-
-    .timeline-card-item {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 10px 16px;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    }
-    .timeline-card-info { flex: 1; min-width: 0; }
-    .timeline-card-artist {
-      font-size: 11px; color: var(--muted); text-transform: uppercase;
-      letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .timeline-card-title {
-      font-size: 14px; margin-top: 2px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .timeline-card-year {
-      font-family: 'Bebas Neue', sans-serif; font-size: 24px;
-      color: var(--gold); flex-shrink: 0;
-    }
-
-    /* ── RESULT / VERIFY STEP ── */
+    /* ── RESULT / REVEAL CARDS ── */
     .result-card {
-      border-radius: var(--radius); padding: 24px 20px;
+      border-radius: var(--radius); padding: 28px 20px;
       display: flex; flex-direction: column; align-items: center;
       gap: 12px; text-align: center;
       animation: fadeUp 0.35s ease forwards;
     }
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(8px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
     .result-correct { background: rgba(29,185,84,0.08); border: 1px solid rgba(29,185,84,0.3); }
     .result-wrong   { background: rgba(255,45,110,0.08); border: 1px solid rgba(255,45,110,0.3); }
     .result-neutral { background: var(--surface); border: 1px solid var(--border); }
 
-    .result-icon { font-size: 30px; font-weight: 700; line-height: 1; }
+    .result-icon { font-size: 32px; font-weight: 700; line-height: 1; }
 
-    .track-meta { display: flex; flex-direction: column; gap: 3px; align-items: center; }
-    .track-meta-artist { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .track-meta-title  { font-size: 17px; font-weight: 500; color: var(--text); line-height: 1.3; }
-    .track-meta-year   { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--gold); letter-spacing: 3px; margin-top: 2px; }
+    .track-meta { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+    .track-meta-artist { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .track-meta-title  { font-size: 18px; font-weight: 500; color: var(--text); line-height: 1.3; }
+    .track-meta-year   {
+      font-family: 'Bebas Neue', sans-serif; font-size: 72px;
+      color: var(--gold); letter-spacing: 6px; line-height: 1;
+    }
 
-    .result-msg { font-size: 13px; color: var(--muted); }
+    .result-msg { font-size: 14px; color: var(--muted); }
+
+    .bonus-result-badge {
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px;
+      color: var(--accent);
+      background: rgba(255,45,110,0.1); border: 1px solid rgba(255,45,110,0.25);
+      border-radius: 20px; padding: 6px 18px;
+    }
 
     .extra-question {
-      font-size: 14px; color: var(--text); line-height: 1.5; text-align: center;
+      font-size: 16px; color: var(--text); line-height: 1.5; text-align: center;
+      padding: 4px 0;
     }
     .extra-question span { color: var(--gold); }
 
     /* ── PROGRESS BAR ── */
-    .progress-header {
-      display: flex; align-items: center; justify-content: space-between;
-    }
-
+    .progress-header { display: flex; align-items: center; justify-content: space-between; }
     .progress-bar-wrap {
       flex: 1; margin: 0 12px;
-      height: 4px; background: var(--surface2);
-      border-radius: 2px; overflow: hidden;
+      height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden;
     }
-    .progress-bar-fill {
-      height: 100%; background: var(--gold);
-      border-radius: 2px; transition: width 0.4s ease;
-    }
-
+    .progress-bar-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s ease; }
     .progress-count {
       font-family: 'Bebas Neue', sans-serif; font-size: 20px;
       letter-spacing: 1px; white-space: nowrap;
     }
-
     .mode-badge {
       font-size: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
       padding: 3px 10px; border-radius: 10px;
-      background: rgba(255,180,0,0.12); color: var(--gold);
-      border: 1px solid rgba(255,180,0,0.3);
+      background: rgba(255,180,0,0.12); color: var(--gold); border: 1px solid rgba(255,180,0,0.3);
     }
 
     /* ── SPLASH ── */
     #splash {
       position: fixed; inset: 0; background: #080810;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 9999; cursor: pointer;
-      transition: opacity 0.6s ease;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999; cursor: pointer; transition: opacity 0.6s ease;
     }
     #splash.fade-out { opacity: 0; pointer-events: none; }
     #splash img { width: 100%; max-width: 680px; object-fit: contain; }
@@ -421,10 +366,7 @@
     }
     @keyframes hintPulse { 0%,100% { opacity:0.35; } 50% { opacity:0.7; } }
 
-    footer {
-      padding: 20px; font-size: 11px; color: var(--muted);
-      text-align: center; letter-spacing: 0.5px;
-    }
+    footer { padding: 20px; font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 0.5px; }
   </style>
 </head>
 <body>
@@ -464,7 +406,6 @@
     <p class="screen-title">Kies je moeilijkheidsgraad</p>
 
     <div class="mode-grid">
-
       <div class="mode-card selected" id="mode-normaal" onclick="selectMode('normaal')">
         <div class="mode-icon">🎵</div>
         <div class="mode-info">
@@ -472,8 +413,8 @@
           <div class="mode-hint">Zet liedjes in de juiste volgorde</div>
         </div>
         <div class="mode-meta">
-          <div class="mode-meta-row">Start: <strong>2 tokens, 1 kaartje</strong></div>
-          <div class="mode-meta-row">Doel: <strong>10 kaartjes</strong></div>
+          <div class="mode-meta-row">Start: <strong>2 tokens</strong></div>
+          <div class="mode-meta-row">Doel: <strong>10 punten</strong></div>
         </div>
       </div>
 
@@ -484,8 +425,8 @@
           <div class="mode-hint">Volgorde + artiest & songtitel</div>
         </div>
         <div class="mode-meta">
-          <div class="mode-meta-row">Start: <strong>5 tokens, 1 kaartje</strong></div>
-          <div class="mode-meta-row">Doel: <strong>10 kaartjes</strong></div>
+          <div class="mode-meta-row">Start: <strong>5 tokens</strong></div>
+          <div class="mode-meta-row">Doel: <strong>10 punten</strong></div>
         </div>
       </div>
 
@@ -496,11 +437,14 @@
           <div class="mode-hint">Volgorde + artiest, titel & exact jaar</div>
         </div>
         <div class="mode-meta">
-          <div class="mode-meta-row">Start: <strong>3 tokens, 1 kaartje</strong></div>
-          <div class="mode-meta-row">Doel: <strong>10 kaartjes</strong></div>
+          <div class="mode-meta-row">Start: <strong>3 tokens</strong></div>
+          <div class="mode-meta-row">Doel: <strong>10 punten</strong></div>
         </div>
       </div>
+    </div>
 
+    <div class="bonus-info">
+      ⚡ Herken je een nummer binnen <strong>3 seconden</strong>? Tik de bonusknop — bij correcte plaatsing telt het kaartje <span class="accent">dubbel</span>.
     </div>
 
     <button class="btn-primary" onclick="startGame()">Spel starten →</button>
@@ -537,10 +481,9 @@
 
   </div>
 
-  <!-- GAME (Hitster) -->
+  <!-- GAME -->
   <div id="screen-game" class="screen" style="display:none">
 
-    <!-- Progress header -->
     <div class="progress-header">
       <span class="mode-badge" id="mode-badge-game">Normaal</span>
       <div class="progress-bar-wrap">
@@ -551,33 +494,41 @@
       </div>
     </div>
 
-    <!-- Track card -->
-    <div class="track-card">
-      <div class="track-status">
-        <div class="status-dot playing" id="status-dot"></div>
-        <span id="playback-status">Aan het spelen</span>
+    <!-- STATE: LISTENING -->
+    <div id="state-listening">
+
+      <div class="listen-card">
+        <div class="track-status">
+          <div class="status-dot playing" id="status-dot"></div>
+          <span id="playback-status">Aan het spelen</span>
+        </div>
+        <div class="waveform" id="waveform"></div>
       </div>
-      <div class="album-art playing" id="album-art">🎵</div>
-      <div class="waveform" id="waveform"></div>
-      <div class="track-hint" id="track-hint" style="display:none"></div>
+
+      <div id="bonus-zone">
+        <button class="btn-bonus" id="btn-bonus" onclick="claimBonus()">⚡ Ik ken dit!</button>
+        <div class="bonus-bar-wrap">
+          <div class="bonus-bar-fill" id="bonus-bar-fill"></div>
+        </div>
+      </div>
+
+      <button class="btn-secondary" id="toggle-btn" onclick="togglePlay()">⏸ Pauzeer</button>
+      <button class="btn-green" onclick="continueToPlacing()">▶ Doorgaan</button>
+
     </div>
 
-    <!-- STATE: PLAYING -->
-    <div id="state-playing">
+    <!-- STATE: PLACING -->
+    <div id="state-placing" style="display:none">
 
-      <button class="btn-green" id="toggle-btn" onclick="togglePlay()">⏸ Pauzeren</button>
-
-      <!-- Timeline with slot selection -->
-      <div class="timeline-section">
-        <p class="timeline-label" id="timeline-label">Jouw tijdlijn — kies een plek</p>
-        <div id="timeline" class="timeline-wrap"></div>
+      <div class="placing-card">
+        <div class="placing-text">Leg je kaartje op de tijdlijn</div>
+        <div class="bonus-active-badge" id="bonus-active-badge" style="display:none">⚡ Bonus gespeeld</div>
       </div>
 
-      <button class="btn-primary" id="btn-verify" onclick="onVerify()" disabled>
-        ✓ Verifieer plaatsing
-      </button>
+      <div class="track-hint" id="track-hint" style="display:none"></div>
 
-      <!-- Tokens + skip -->
+      <button class="btn-primary" onclick="onVerify()">✓ Verifieer plaatsing</button>
+
       <div class="token-row">
         <div class="token-left">
           <span class="token-label">Tokens</span>
@@ -586,28 +537,39 @@
         <button class="btn-skip" id="btn-skip" onclick="skipCard()">⏭ Skip (−1 token)</button>
       </div>
 
-      <!-- Trade tokens (shown when ≥3 tokens and slot selected) -->
-      <button class="btn-secondary" id="btn-trade" onclick="tradeTokens()" style="display:none;font-size:13px">
-        ↕ Ruil 3 tokens — gratis plaatsen
-      </button>
+    </div>
+
+    <!-- STATE: SELF-REPORT (was placement correct?) -->
+    <div id="state-selfreport" style="display:none">
+
+      <div class="result-card result-neutral">
+        <div class="track-meta">
+          <div class="track-meta-year"   id="sr-year"></div>
+          <div class="track-meta-artist" id="sr-artist"></div>
+          <div class="track-meta-title"  id="sr-title"></div>
+        </div>
+      </div>
+
+      <p class="extra-question">Stond je kaartje op de <span>juiste plek</span>?</p>
+
+      <button class="btn-green"  onclick="selfReportPlacement(true)">✓ Ja, correct</button>
+      <button class="btn-danger" onclick="selfReportPlacement(false)">✗ Nee, fout</button>
 
     </div>
 
-    <!-- STATE: EXTRA (Pro/Expert only — did you know the extra info?) -->
+    <!-- STATE: EXTRA (Pro/Expert: did you know the extra info?) -->
     <div id="state-extra" style="display:none">
 
-      <div class="result-card result-neutral" id="extra-reveal-card">
+      <div class="result-card result-neutral">
         <div class="track-meta">
           <div class="track-meta-artist" id="extra-artist"></div>
           <div class="track-meta-title"  id="extra-title"></div>
-          <div class="track-meta-year"   id="extra-year"></div>
         </div>
-        <p class="result-msg" id="extra-placement-msg"></p>
       </div>
 
       <p class="extra-question" id="extra-question"></p>
 
-      <button class="btn-green" onclick="answerExtra(true)">✓ Ja, kende ik</button>
+      <button class="btn-green"  onclick="answerExtra(true)">✓ Ja, kende ik</button>
       <button class="btn-danger" onclick="answerExtra(false)">✗ Nee, kende ik niet</button>
 
     </div>
@@ -622,13 +584,8 @@
           <div class="track-meta-title"  id="result-title"></div>
           <div class="track-meta-year"   id="result-year"></div>
         </div>
+        <div class="bonus-result-badge" id="bonus-result-badge" style="display:none">⚡ BONUS · +2 PUNTEN</div>
         <p class="result-msg" id="result-msg"></p>
-      </div>
-
-      <!-- Timeline read-only (updated) -->
-      <div class="timeline-section">
-        <p class="timeline-label">Jouw tijdlijn</p>
-        <div id="timeline-result" class="timeline-wrap"></div>
       </div>
 
       <button class="btn-primary" id="btn-next" onclick="nextRound()">
@@ -641,7 +598,7 @@
 
 </main>
 
-<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.2.0</span></footer>
+<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.3.0</span></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.umd.min.js"></script>
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
@@ -658,24 +615,28 @@
     expert:  { label: 'Expert',  tokens: 3, extra: 'artiest, songtitel & exact jaar' },
   };
 
-  const TARGET = 10;
+  const TARGET           = 10;
+  const BONUS_WINDOW_MS  = 3000;
 
   // ─── STATE ──────────────────────────────────────────────────
-  let accessToken    = localStorage.getItem('access_token');
-  let deviceId       = null;
+  let accessToken     = localStorage.getItem('access_token');
+  let deviceId        = null;
   let deviceReadyTime = null;
-  let player         = null;
-  let qrScanner      = null;
-  let currentTrack   = null;   // {artist, title, year, yearNum}
+  let player          = null;
+  let qrScanner       = null;
+  let currentTrack    = null;
 
-  let mode           = 'normaal';
-  let tokens         = 2;
-  let timeline       = [];     // [{title, artist, year, yearNum}] sorted by yearNum
-  let correctCount   = 0;
-  let round          = 1;
-  let selectedSlot   = null;
-  let isPlaying      = true;
-  let placementOk    = false;  // used between state-extra and state-result
+  let mode            = 'normaal';
+  let tokens          = 2;
+  let correctCount    = 0;
+  let round           = 1;
+  let isPlaying       = true;
+
+  let bonusClaimed    = false;
+  let bonusExpired    = false;
+  let bonusTimeout    = null;
+  let autoPauseTimeout = null;
+  let srPlacementOk   = false;
 
   // ─── PKCE ───────────────────────────────────────────────────
   function randomString(len) {
@@ -720,9 +681,9 @@
       deviceReadyTime = Date.now();
       setStatus('✅ Klaar om te spelen');
     });
-    player.addListener('not_ready',           () => setStatus('⚠️ Speler niet beschikbaar'));
-    player.addListener('initialization_error', e => setStatus('Init fout: ' + e.message));
-    player.addListener('authentication_error', () => {
+    player.addListener('not_ready',            () => setStatus('⚠️ Speler niet beschikbaar'));
+    player.addListener('initialization_error',  e => setStatus('Init fout: ' + e.message));
+    player.addListener('authentication_error',  () => {
       localStorage.removeItem('access_token');
       setTimeout(() => location.reload(), 2000);
     });
@@ -764,7 +725,6 @@
   function startGame() {
     const cfg = MODES[mode];
     tokens       = cfg.tokens;
-    timeline     = [];
     correctCount = 0;
     round        = 1;
 
@@ -856,10 +816,7 @@
       return;
     }
 
-    if (res.status === 204) {
-      showGameScreen();
-      return;
-    }
+    if (res.status === 204) { showGameScreen(); return; }
 
     let errMsg = `HTTP ${res.status}`;
     try {
@@ -871,7 +828,7 @@
     } catch (_) {}
 
     if ((res.status === 404 || res.status >= 500) && retries > 0) {
-      setStatus(`Wachten op device… opnieuw proberen`);
+      setStatus('Wachten op device… opnieuw proberen');
       await new Promise(r => setTimeout(r, 1000));
       return playTrack(uri, retries - 1);
     }
@@ -889,216 +846,210 @@
   function showGameScreen() {
     hide('screen-scan');
 
-    selectedSlot = null;
     isPlaying    = true;
+    bonusClaimed = false;
+    bonusExpired = false;
 
-    const art = document.getElementById('album-art');
-    art.className   = 'album-art playing';
-    art.textContent = '🎵';
-
-    document.getElementById('status-dot').className = 'status-dot playing';
+    document.getElementById('status-dot').className        = 'status-dot playing';
     document.getElementById('playback-status').textContent = 'Aan het spelen';
-    document.getElementById('toggle-btn').textContent = '⏸ Pauzeren';
-    document.getElementById('btn-verify').disabled = true;
-    document.getElementById('timeline-label').textContent = 'Jouw tijdlijn — kies een plek';
-
-    // Show mode hint for Pro/Expert
-    const cfg = MODES[mode];
-    const hint = document.getElementById('track-hint');
-    if (cfg.extra) {
-      hint.innerHTML = `Noem ook: <strong>${cfg.extra}</strong>`;
-      hint.style.display = '';
-    } else {
-      hint.style.display = 'none';
-    }
+    document.getElementById('toggle-btn').textContent      = '⏸ Pauzeer';
 
     buildWaveform();
     setWaveformActive(true);
-    updateTokenUI();
-    renderTimeline(true);
+    startBonusWindow();
 
-    showState('playing');
+    if (autoPauseTimeout) clearTimeout(autoPauseTimeout);
+    autoPauseTimeout = setTimeout(() => {
+      if (isPlaying) {
+        player.pause().then(() => {
+          isPlaying = false;
+          document.getElementById('status-dot').className        = 'status-dot paused';
+          document.getElementById('playback-status').textContent = 'Gepauzeerd';
+          document.getElementById('toggle-btn').textContent      = '▶ Doorgaan';
+          setWaveformActive(false);
+        });
+      }
+    }, BONUS_WINDOW_MS);
+
+    showState('listening');
     show('screen-game');
   }
 
   function togglePlay() {
     if (isPlaying) {
+      if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
       player.pause().then(() => {
         isPlaying = false;
-        document.getElementById('album-art').classList.remove('playing');
-        document.getElementById('status-dot').className = 'status-dot paused';
+        document.getElementById('status-dot').className        = 'status-dot paused';
         document.getElementById('playback-status').textContent = 'Gepauzeerd';
-        document.getElementById('toggle-btn').textContent = '▶ Doorgaan';
+        document.getElementById('toggle-btn').textContent      = '▶ Doorgaan';
         setWaveformActive(false);
       });
     } else {
       player.resume().then(() => {
         isPlaying = true;
-        document.getElementById('album-art').classList.add('playing');
-        document.getElementById('status-dot').className = 'status-dot playing';
+        document.getElementById('status-dot').className        = 'status-dot playing';
         document.getElementById('playback-status').textContent = 'Aan het spelen';
-        document.getElementById('toggle-btn').textContent = '⏸ Pauzeren';
+        document.getElementById('toggle-btn').textContent      = '⏸ Pauzeer';
         setWaveformActive(true);
       });
     }
   }
 
-  // ─── SLOT SELECTION ─────────────────────────────────────────
-  function selectSlot(i) {
-    selectedSlot = i;
-    renderTimeline(true);
-    document.getElementById('btn-verify').disabled = false;
-    document.getElementById('btn-trade').style.display =
-      tokens >= 3 ? '' : 'none';
+  // ─── BONUS WINDOW ───────────────────────────────────────────
+  function startBonusWindow() {
+    const zone = document.getElementById('bonus-zone');
+    const btn  = document.getElementById('btn-bonus');
+    const fill = document.getElementById('bonus-bar-fill');
+
+    zone.style.display  = '';
+    zone.classList.remove('fading');
+    btn.className       = 'btn-bonus';
+    btn.textContent     = '⚡ Ik ken dit!';
+    fill.className      = 'bonus-bar-fill';
+
+    // Force reflow so the animation restarts cleanly
+    void fill.offsetWidth;
+    fill.className = 'bonus-bar-fill running';
+
+    if (bonusTimeout) clearTimeout(bonusTimeout);
+    bonusTimeout = setTimeout(() => {
+      if (!bonusClaimed) {
+        bonusExpired = true;
+        zone.classList.add('fading');
+        setTimeout(() => { zone.style.display = 'none'; zone.classList.remove('fading'); }, 400);
+      }
+    }, BONUS_WINDOW_MS);
   }
 
-  // ─── TOKEN ACTIONS ──────────────────────────────────────────
+  function claimBonus() {
+    if (bonusExpired || bonusClaimed) return;
+    bonusClaimed = true;
+    clearTimeout(bonusTimeout);
+
+    const btn  = document.getElementById('btn-bonus');
+    const fill = document.getElementById('bonus-bar-fill');
+    btn.className       = 'btn-bonus claimed';
+    btn.textContent     = '⚡ Bonus gespeeld!';
+    fill.style.animation = 'none';
+    fill.style.width     = '100%';
+  }
+
+  // ─── CONTINUE TO PLACING ────────────────────────────────────
+  function continueToPlacing() {
+    if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
+    if (isPlaying) {
+      player.pause().then(() => {
+        isPlaying = false;
+        setWaveformActive(false);
+      });
+    }
+    if (bonusTimeout) clearTimeout(bonusTimeout);
+
+    document.getElementById('bonus-active-badge').style.display = bonusClaimed ? '' : 'none';
+
+    const cfg  = MODES[mode];
+    const hint = document.getElementById('track-hint');
+    if (cfg.extra) {
+      hint.innerHTML    = `Noem ook: <strong>${cfg.extra}</strong>`;
+      hint.style.display = '';
+    } else {
+      hint.style.display = 'none';
+    }
+
+    updateTokenUI();
+    showState('placing');
+  }
+
+  // ─── SKIP ───────────────────────────────────────────────────
   function skipCard() {
     if (tokens <= 0) return;
     tokens--;
     currentTrack = null;
+    if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
+    if (bonusTimeout) clearTimeout(bonusTimeout);
     hide('screen-game');
-
     resetScanScreen();
     show('screen-scan');
     startScanner();
   }
 
-  function tradeTokens() {
-    if (tokens < 3 || selectedSlot === null) return;
-    tokens -= 3;
-    // Force-correct placement without verification
-    if (currentTrack) {
-      timeline.splice(selectedSlot, 0, {
-        title: currentTrack.title, artist: currentTrack.artist,
-        year: currentTrack.year, yearNum: currentTrack.yearNum,
-      });
-      correctCount++;
-      updateProgress();
-    }
-    showResult(true, true);
-  }
-
-  function updateTokenUI() {
-    const cfg = MODES[mode];
-    const max = cfg.tokens;
-    const dots = document.getElementById('token-dots');
-    dots.innerHTML = '';
-    for (let i = 0; i < max; i++) {
-      const d = document.createElement('div');
-      d.className = 'token-dot' + (i >= tokens ? ' spent' : '');
-      dots.appendChild(d);
-    }
-    document.getElementById('btn-skip').disabled = tokens <= 0;
-  }
-
-  // ─── VERIFY ─────────────────────────────────────────────────
-  function pauseForVerify() {
-    if (isPlaying) {
-      player.pause();
-      isPlaying = false;
-      document.getElementById('album-art').classList.remove('playing');
-      document.getElementById('status-dot').className = 'status-dot paused';
-      document.getElementById('playback-status').textContent = 'Gepauzeerd';
-      setWaveformActive(false);
-    }
-  }
-
+  // ─── VERIFY → SELF-REPORT ───────────────────────────────────
   function onVerify() {
-    if (selectedSlot === null) return;
-    pauseForVerify();
-
     if (!currentTrack) {
-      // No metadata — skip to result with unknown outcome
-      showResult(false, false);
+      // No metadata — show neutral result immediately
+      document.getElementById('result-icon').textContent  = '?';
+      document.getElementById('result-icon').style.color  = 'var(--muted)';
+      document.getElementById('result-artist').textContent = '';
+      document.getElementById('result-title').textContent  = 'Info niet beschikbaar';
+      document.getElementById('result-year').textContent   = '';
+      document.getElementById('bonus-result-badge').style.display = 'none';
+      document.getElementById('result-msg').textContent    = 'Geen trackinfo — controleer het kaartje.';
+      document.getElementById('result-card').className     = 'result-card result-neutral';
+      const nextBtn = document.getElementById('btn-next');
+      nextBtn.textContent = 'Volgende kaartje →';
+      nextBtn.onclick     = nextRound;
+      showState('result');
       return;
     }
 
-    const prev = timeline[selectedSlot - 1]?.yearNum ?? -Infinity;
-    const next = timeline[selectedSlot]?.yearNum     ?? Infinity;
-    placementOk = currentTrack.yearNum >= prev && currentTrack.yearNum <= next;
-
     const cfg = MODES[mode];
-    if (cfg.extra) {
-      // Pro/Expert: show track info + ask about extra knowledge
+
+    // For Pro/Expert, don't reveal artist/title yet (player stated them aloud already)
+    document.getElementById('sr-year').textContent   = currentTrack.year;
+    document.getElementById('sr-artist').textContent = cfg.extra ? '' : currentTrack.artist;
+    document.getElementById('sr-title').textContent  = cfg.extra ? '' : currentTrack.title;
+
+    showState('selfreport');
+  }
+
+  function selfReportPlacement(ok) {
+    srPlacementOk = ok;
+    const cfg = MODES[mode];
+
+    if (cfg.extra && ok) {
+      // Reveal artist + title and ask about extra knowledge
       document.getElementById('extra-artist').textContent = currentTrack.artist;
       document.getElementById('extra-title').textContent  = currentTrack.title;
-      document.getElementById('extra-year').textContent   = currentTrack.year;
-      document.getElementById('extra-placement-msg').textContent = placementOk
-        ? '✓ Plaatsing correct'
-        : `✗ Plaatsing fout — juiste jaar: ${currentTrack.year}`;
-      document.getElementById('extra-placement-msg').style.color = placementOk
-        ? 'var(--green)' : 'var(--accent)';
       document.getElementById('extra-question').innerHTML =
         `Kende je ook de <span>${cfg.extra}</span>?`;
       showState('extra');
     } else {
-      // Normaal: placement is the only check
-      if (placementOk) {
-        timeline.splice(selectedSlot, 0, {
-          title: currentTrack.title, artist: currentTrack.artist,
-          year: currentTrack.year, yearNum: currentTrack.yearNum,
-        });
-        correctCount++;
-        updateProgress();
-      }
-      showResult(placementOk, false);
+      finalizeResult(ok);
     }
   }
 
   function answerExtra(knew) {
-    const ok = placementOk && knew;
-    if (ok) {
-      timeline.splice(selectedSlot, 0, {
-        title: currentTrack.title, artist: currentTrack.artist,
-        year: currentTrack.year, yearNum: currentTrack.yearNum,
-      });
-      correctCount++;
-      updateProgress();
-    }
-    showResult(ok, false);
+    finalizeResult(srPlacementOk && knew);
   }
 
-  function showResult(ok, wasTraded) {
-    const hasTrack = !!currentTrack;
+  // ─── FINALIZE RESULT ────────────────────────────────────────
+  function finalizeResult(ok) {
+    const isBonus = ok && bonusClaimed;
+    const points  = isBonus ? 2 : (ok ? 1 : 0);
 
-    document.getElementById('result-icon').textContent  = ok ? '✓' : (hasTrack ? '✗' : '?');
-    document.getElementById('result-icon').style.color  = ok ? 'var(--green)' : (hasTrack ? 'var(--accent)' : 'var(--muted)');
-    document.getElementById('result-artist').textContent = hasTrack ? currentTrack.artist : '';
-    document.getElementById('result-title').textContent  = hasTrack ? currentTrack.title  : 'Info niet beschikbaar';
-    document.getElementById('result-year').textContent   = hasTrack ? currentTrack.year   : '';
-
-    let msg = '';
-    if (wasTraded) {
-      msg = 'Gratis geplaatst via tokens.';
-    } else if (!hasTrack) {
-      msg = 'Geen trackinfo — controleer het kaartje.';
-    } else if (ok) {
-      msg = 'Goed! Kaartje toegevoegd aan je tijdlijn.';
-    } else {
-      const cfg = MODES[mode];
-      if (!placementOk) {
-        msg = `Verkeerde plek — juiste jaar is ${currentTrack.year}.`;
-      } else {
-        msg = `Plaatsing goed, maar ${cfg.extra} klopte niet.`;
-      }
-    }
-    document.getElementById('result-msg').textContent = msg;
-    document.getElementById('result-card').className  = 'result-card ' + (ok ? 'result-correct' : 'result-wrong');
-
-    // Render timeline read-only
-    const container = document.getElementById('timeline-result');
-    container.innerHTML = '';
-    if (timeline.length === 0) {
-      const p = document.createElement('p');
-      p.style.cssText = 'font-size:12px;color:var(--muted);text-align:center;padding:12px 0';
-      p.textContent = 'Nog geen kaartjes geplaatst';
-      container.appendChild(p);
-    } else {
-      timeline.forEach(item => container.appendChild(makeCardEl(item)));
+    if (points > 0) {
+      correctCount += points;
+      updateProgress();
     }
 
-    const won = correctCount >= TARGET;
+    document.getElementById('result-icon').textContent  = ok ? '✓' : '✗';
+    document.getElementById('result-icon').style.color  = ok ? 'var(--green)' : 'var(--accent)';
+    document.getElementById('result-artist').textContent = currentTrack.artist;
+    document.getElementById('result-title').textContent  = currentTrack.title;
+    document.getElementById('result-year').textContent   = currentTrack.year;
+
+    document.getElementById('bonus-result-badge').style.display = isBonus ? '' : 'none';
+
+    document.getElementById('result-msg').textContent =
+      isBonus ? 'Bonus! Kaartje telt dubbel.' :
+      ok      ? 'Goed geplaatst!' :
+                `Helaas — het juiste jaar was ${currentTrack.year}.`;
+
+    document.getElementById('result-card').className =
+      'result-card ' + (ok ? 'result-correct' : 'result-wrong');
+
+    const won     = correctCount >= TARGET;
     const nextBtn = document.getElementById('btn-next');
     if (won) {
       nextBtn.textContent = '🎉 Gewonnen! Nieuw spel';
@@ -1115,7 +1066,10 @@
   function nextRound() {
     round++;
     currentTrack = null;
-    selectedSlot = null;
+    bonusClaimed = false;
+    bonusExpired = false;
+    if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
+    if (bonusTimeout) clearTimeout(bonusTimeout);
     document.getElementById('round-display').textContent = round;
 
     hide('screen-game');
@@ -1125,76 +1079,41 @@
   }
 
   function winGame() {
-    timeline     = [];
     correctCount = 0;
     round        = 1;
     currentTrack = null;
+    bonusClaimed = false;
+    bonusExpired = false;
+    if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
+    if (bonusTimeout) clearTimeout(bonusTimeout);
     hide('screen-game');
     show('screen-mode');
   }
 
   // ─── PROGRESS ───────────────────────────────────────────────
   function updateProgress() {
-    document.getElementById('correct-count').textContent  = correctCount;
-    document.getElementById('progress-fill').style.width  = (correctCount / TARGET * 100) + '%';
+    document.getElementById('correct-count').textContent = Math.min(correctCount, TARGET);
+    document.getElementById('progress-fill').style.width = Math.min(correctCount / TARGET * 100, 100) + '%';
     updateTokenUI();
   }
 
-  // ─── TIMELINE RENDER ────────────────────────────────────────
-  function renderTimeline(interactive) {
-    const c = document.getElementById('timeline');
-    c.innerHTML = '';
-
-    if (timeline.length === 0 && interactive) {
-      c.appendChild(makeSlotEl(0));
-      return;
+  function updateTokenUI() {
+    const cfg  = MODES[mode];
+    const dots = document.getElementById('token-dots');
+    dots.innerHTML = '';
+    for (let i = 0; i < cfg.tokens; i++) {
+      const d = document.createElement('div');
+      d.className = 'token-dot' + (i >= tokens ? ' spent' : '');
+      dots.appendChild(d);
     }
-
-    if (interactive) c.appendChild(makeSlotEl(0));
-
-    timeline.forEach((item, i) => {
-      c.appendChild(makeCardEl(item));
-      if (interactive) c.appendChild(makeSlotEl(i + 1));
-    });
-
-    if (!interactive && timeline.length === 0) {
-      const p = document.createElement('p');
-      p.style.cssText = 'font-size:12px;color:var(--muted);text-align:center;padding:12px 0';
-      p.textContent   = 'Nog geen kaartjes geplaatst';
-      c.appendChild(p);
-    }
-  }
-
-  function makeSlotEl(i) {
-    const btn = document.createElement('button');
-    btn.className = 'timeline-slot-btn' + (selectedSlot === i ? ' selected' : '');
-    const prev = timeline[i - 1]?.yearNum;
-    const next = timeline[i]?.yearNum;
-    if (!prev && !next)  btn.textContent = '+ Zet hier als eerste kaartje';
-    else if (!prev)      btn.textContent = `+ Zet hier  (vóór ${next})`;
-    else if (!next)      btn.textContent = `+ Zet hier  (na ${prev})`;
-    else                 btn.textContent = `+ Zet hier  (${prev} – ${next})`;
-    btn.onclick = () => selectSlot(i);
-    return btn;
-  }
-
-  function makeCardEl(item) {
-    const div = document.createElement('div');
-    div.className = 'timeline-card-item';
-    div.innerHTML = `
-      <div class="timeline-card-info">
-        <div class="timeline-card-artist">${item.artist}</div>
-        <div class="timeline-card-title">${item.title}</div>
-      </div>
-      <div class="timeline-card-year">${item.year}</div>`;
-    return div;
+    document.getElementById('btn-skip').disabled = tokens <= 0;
   }
 
   // ─── WAVEFORM ───────────────────────────────────────────────
   function buildWaveform() {
     const wf = document.getElementById('waveform');
     wf.innerHTML = '';
-    const heights = [8,14,20,16,10,18,22,12,8,16,20,14,10,18,12];
+    const heights = [12,22,36,28,16,32,44,20,14,28,40,22,16,32,20];
     const speeds  = ['0.4s','0.6s','0.5s','0.7s','0.45s','0.55s','0.65s','0.5s','0.4s','0.6s','0.5s','0.7s','0.45s','0.55s','0.65s'];
     heights.forEach((h, i) => {
       const b = document.createElement('div');
@@ -1212,13 +1131,13 @@
 
   // ─── HELPERS ────────────────────────────────────────────────
   function showState(s) {
-    ['playing','extra','result'].forEach(id =>
+    ['listening','placing','selfreport','extra','result'].forEach(id =>
       document.getElementById('state-' + id).style.display = (id === s ? '' : 'none')
     );
   }
 
-  function show(id)  { document.getElementById(id).style.display = ''; }
-  function hide(id)  { document.getElementById(id).style.display = 'none'; }
+  function show(id) { document.getElementById(id).style.display = ''; }
+  function hide(id) { document.getElementById(id).style.display = 'none'; }
 
   function setStatus(msg) { document.getElementById('player-status').textContent = msg; }
 
@@ -1230,8 +1149,8 @@
   }
 
   function resetScanScreen() {
-    document.getElementById('btn-start-scan').style.display   = '';
-    document.getElementById('qr-video').style.display         = 'none';
+    document.getElementById('btn-start-scan').style.display    = '';
+    document.getElementById('qr-video').style.display          = 'none';
     document.getElementById('scan-frame-static').style.display = '';
     const r = document.getElementById('scan-result');
     r.style.display = 'none';
