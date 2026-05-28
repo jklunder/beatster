@@ -679,6 +679,130 @@
       0%, 100% { opacity: 0.35; }
       50% { opacity: 0.7; }
     }
+
+    /* ---- HITSTER MODE ---- */
+    .diff-card-hitster { border-color: rgba(255,180,0,0.2); }
+    .diff-card-hitster:hover { border-color: rgba(255,180,0,0.4); background: rgba(255,180,0,0.04); }
+    .diff-card-hitster.selected { border-color: #ffb400; background: rgba(255,180,0,0.08); }
+    .diff-card-hitster .diff-name { color: #ffb400; }
+
+    .diff-mode-sep {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .diff-mode-sep::before,
+    .diff-mode-sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .hitster-badge {
+      background: rgba(255,180,0,0.12);
+      color: #ffb400;
+      border-color: rgba(255,180,0,0.3);
+    }
+
+    .hitster-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hitster-progress {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+
+    .timeline-section { display: flex; flex-direction: column; gap: 8px; }
+
+    .timeline-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .timeline-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .timeline-slot-btn {
+      width: 100%;
+      padding: 9px 14px;
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .timeline-slot-btn:hover { border-color: #ffb400; color: #ffb400; background: rgba(255,180,0,0.04); }
+    .timeline-slot-btn.selected { border-style: solid; border-color: #ffb400; color: #ffb400; background: rgba(255,180,0,0.1); font-weight: 500; }
+
+    .timeline-card-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .timeline-card-info { flex: 1; min-width: 0; }
+
+    .timeline-card-artist {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .timeline-card-title {
+      font-size: 14px;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .timeline-card-year {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      color: #ffb400;
+      flex-shrink: 0;
+    }
+
+    .hitster-result-card {
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+      animation: fadeUp 0.4s ease forwards;
+    }
+    .result-correct { background: rgba(29,185,84,0.08); border: 1px solid rgba(29,185,84,0.3); }
+    .result-wrong   { background: rgba(255,45,110,0.08); border: 1px solid rgba(255,45,110,0.3); }
+
+    .hitster-result-icon { font-size: 32px; font-weight: 700; line-height: 1; }
+
+    button:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
   </style>
 </head>
 <body>
@@ -752,6 +876,20 @@
         <div class="diff-pts">
           <div class="diff-pts-row">Correct: <strong>+3 pt</strong></div>
           <div class="diff-pts-row">Bonus: <strong>+5 pt</strong></div>
+        </div>
+      </div>
+
+      <div class="diff-mode-sep">originele hitster regels</div>
+
+      <div class="diff-card diff-card-hitster" id="diff-hitster" onclick="selectDifficulty('hitster')">
+        <div class="diff-icon">🎯</div>
+        <div class="diff-info">
+          <div class="diff-name">Hitster</div>
+          <div class="diff-hint">Bouw een tijdlijn van 10 liedjes</div>
+        </div>
+        <div class="diff-pts">
+          <div class="diff-pts-row">Doel: <strong>10 kaartjes</strong></div>
+          <div class="diff-pts-row">In de juiste volgorde</div>
         </div>
       </div>
 
@@ -898,9 +1036,64 @@
 
   </div>
 
+  <!-- ===================== HITSTER SCREEN ===================== -->
+  <div id="screen-hitster" class="screen" style="display:none">
+
+    <div class="hitster-header">
+      <span class="diff-badge hitster-badge">Hitster</span>
+      <div class="hitster-progress">
+        <span id="hitster-correct">0</span><span style="color:var(--muted);font-size:14px;font-family:'DM Sans',sans-serif;letter-spacing:0"> / 10 kaartjes</span>
+      </div>
+    </div>
+
+    <div class="track-card">
+      <div class="track-status">
+        <div class="status-dot playing" id="hitster-status-dot"></div>
+        <span id="hitster-playback-status">Aan het spelen</span>
+      </div>
+      <div class="album-art playing" id="hitster-album-art">🎵</div>
+      <div class="waveform" id="hitster-waveform"></div>
+      <div class="track-info-hidden">
+        <p class="hidden-label">Luister — bepaal het jaar</p>
+        <div class="hidden-blocks">
+          <div class="hidden-block" style="width:40px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="hitster-playing-controls">
+      <button class="btn-play" id="hitster-toggle-btn" onclick="hitsterTogglePlay()">⏸ Pauzeren</button>
+    </div>
+
+    <div class="timeline-section">
+      <p class="timeline-label" id="timeline-label">Jouw tijdlijn — kies een plek</p>
+      <div id="hitster-timeline" class="timeline-wrap"></div>
+    </div>
+
+    <button class="btn-reveal" id="btn-hitster-verify" onclick="hitsterVerify()" disabled>
+      ✓ Verifieer plaatsing
+    </button>
+
+    <div id="hitster-result" style="display:none">
+      <div id="hitster-result-card" class="hitster-result-card">
+        <div class="hitster-result-icon" id="hitster-result-icon"></div>
+        <div class="track-meta">
+          <div class="track-meta-artist" id="hitster-meta-artist"></div>
+          <div class="track-meta-title" id="hitster-meta-title"></div>
+          <div class="track-meta-year" id="hitster-meta-year" style="color:#ffb400"></div>
+        </div>
+        <p id="hitster-result-text" style="font-size:13px;color:var(--muted)"></p>
+      </div>
+      <button class="btn-primary" id="hitster-next-btn" style="margin-top:4px" onclick="hitsterNextRound()">
+        Volgende kaartje →
+      </button>
+    </div>
+
+  </div>
+
 </main>
 
-<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.1.3</span></footer>
+<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.1.4</span></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.umd.min.js"></script>
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
@@ -930,6 +1123,13 @@
   let qrScanner     = null;
   let difficulty    = 'normaal';
   let currentTrack  = null;
+
+  // Hitster-specific state
+  const HITSTER_TARGET  = 10;
+  let hitsterTimeline   = [];   // [{title, artist, year, yearNum}] sorted by yearNum
+  let hitsterCorrect    = 0;
+  let hitsterSlot       = null; // selected insertion index
+  let hitsterPlaying    = true;
 
   // ─── PKCE HELPERS ──────────────────────────────────────────
   function randomString(length) {
@@ -1040,9 +1240,16 @@
   }
 
   function startGame() {
-    const cfg = DIFFICULTY[difficulty];
-    document.getElementById('scan-diff-badge').textContent   = cfg.label;
-    document.getElementById('playing-diff-badge').textContent = cfg.label;
+    const label = difficulty === 'hitster' ? 'Hitster' : DIFFICULTY[difficulty].label;
+    document.getElementById('scan-diff-badge').textContent    = label;
+    document.getElementById('playing-diff-badge').textContent = label;
+
+    if (difficulty === 'hitster') {
+      hitsterTimeline = [];
+      hitsterCorrect  = 0;
+      document.getElementById('hitster-correct').textContent = '0';
+    }
+
     hide('screen-difficulty');
     show('screen-scan');
   }
@@ -1172,8 +1379,12 @@
     console.log('[Beatster] play response status:', res.status);
 
     if (res.status === 204) {
-      showPlayingScreen();
-      startCountdown();
+      if (difficulty === 'hitster') {
+        showHitsterScreen();
+      } else {
+        showPlayingScreen();
+        startCountdown();
+      }
       return;
     }
 
@@ -1366,6 +1577,215 @@
     setWaveformActive(true);
     setPlaybackStatus('Aan het spelen');
     show('screen-playing');
+  }
+
+  // ─── HITSTER ────────────────────────────────────────────────
+  function showHitsterScreen() {
+    hide('screen-scan');
+    hide('hitster-result');
+
+    hitsterSlot    = null;
+    hitsterPlaying = true;
+
+    const art = document.getElementById('hitster-album-art');
+    art.className   = 'album-art playing';
+    art.textContent = '🎵';
+    document.getElementById('hitster-status-dot').className     = 'status-dot playing';
+    document.getElementById('hitster-playback-status').textContent = 'Aan het spelen';
+    document.getElementById('hitster-toggle-btn').textContent   = '⏸ Pauzeren';
+    document.getElementById('btn-hitster-verify').disabled      = true;
+    document.getElementById('timeline-label').textContent       = 'Jouw tijdlijn — kies een plek';
+
+    show('hitster-playing-controls');
+    document.getElementById('btn-hitster-verify').style.display = '';
+
+    buildHitsterWaveform();
+    setHitsterWaveformActive(true);
+    renderTimeline(true);
+    show('screen-hitster');
+  }
+
+  function hitsterTogglePlay() {
+    if (hitsterPlaying) {
+      player.pause().then(() => {
+        hitsterPlaying = false;
+        document.getElementById('hitster-toggle-btn').textContent = '▶ Doorgaan';
+        document.getElementById('hitster-album-art').classList.remove('playing');
+        document.getElementById('hitster-status-dot').className  = 'status-dot paused';
+        document.getElementById('hitster-playback-status').textContent = 'Gepauzeerd';
+        setHitsterWaveformActive(false);
+      });
+    } else {
+      player.resume().then(() => {
+        hitsterPlaying = true;
+        document.getElementById('hitster-toggle-btn').textContent = '⏸ Pauzeren';
+        document.getElementById('hitster-album-art').classList.add('playing');
+        document.getElementById('hitster-status-dot').className  = 'status-dot playing';
+        document.getElementById('hitster-playback-status').textContent = 'Aan het spelen';
+        setHitsterWaveformActive(true);
+      });
+    }
+  }
+
+  function selectSlot(index) {
+    hitsterSlot = index;
+    renderTimeline(true);
+    document.getElementById('btn-hitster-verify').disabled = false;
+  }
+
+  function renderTimeline(interactive) {
+    const container = document.getElementById('hitster-timeline');
+    container.innerHTML = '';
+
+    if (interactive) container.appendChild(makeSlotEl(0));
+
+    hitsterTimeline.forEach((item, i) => {
+      container.appendChild(makeTimelineCardEl(item));
+      if (interactive) container.appendChild(makeSlotEl(i + 1));
+    });
+
+    if (!interactive && hitsterTimeline.length === 0) {
+      const empty = document.createElement('p');
+      empty.style.cssText = 'font-size:12px;color:var(--muted);text-align:center;padding:12px 0';
+      empty.textContent   = 'Nog geen kaartjes geplaatst';
+      container.appendChild(empty);
+    }
+  }
+
+  function makeSlotEl(index) {
+    const btn = document.createElement('button');
+    btn.className = 'timeline-slot-btn' + (hitsterSlot === index ? ' selected' : '');
+
+    const prev = hitsterTimeline[index - 1]?.yearNum;
+    const next = hitsterTimeline[index]?.yearNum;
+
+    if (!prev && !next)  btn.textContent = '+ Zet hier als eerste kaartje';
+    else if (!prev)      btn.textContent = `+ Zet hier  (vóór ${next})`;
+    else if (!next)      btn.textContent = `+ Zet hier  (na ${prev})`;
+    else                 btn.textContent = `+ Zet hier  (${prev} – ${next})`;
+
+    btn.onclick = () => selectSlot(index);
+    return btn;
+  }
+
+  function makeTimelineCardEl(item) {
+    const div = document.createElement('div');
+    div.className = 'timeline-card-item';
+    div.innerHTML = `
+      <div class="timeline-card-info">
+        <div class="timeline-card-artist">${item.artist}</div>
+        <div class="timeline-card-title">${item.title}</div>
+      </div>
+      <div class="timeline-card-year">${item.year}</div>`;
+    return div;
+  }
+
+  function hitsterVerify() {
+    if (hitsterSlot === null) return;
+
+    // Pause playback
+    if (hitsterPlaying) {
+      player.pause();
+      hitsterPlaying = false;
+      document.getElementById('hitster-album-art').classList.remove('playing');
+      document.getElementById('hitster-status-dot').className = 'status-dot paused';
+      setHitsterWaveformActive(false);
+    }
+
+    hide('hitster-playing-controls');
+    document.getElementById('btn-hitster-verify').style.display = 'none';
+
+    let correct = false;
+
+    if (currentTrack) {
+      const yearNum = parseInt(currentTrack.year);
+      const prev    = hitsterTimeline[hitsterSlot - 1]?.yearNum ?? -Infinity;
+      const next    = hitsterTimeline[hitsterSlot]?.yearNum ?? Infinity;
+      correct       = yearNum >= prev && yearNum <= next;
+
+      if (correct) {
+        hitsterTimeline.splice(hitsterSlot, 0, {
+          title: currentTrack.title, artist: currentTrack.artist,
+          year: currentTrack.year,   yearNum,
+        });
+        hitsterCorrect++;
+        document.getElementById('hitster-correct').textContent = hitsterCorrect;
+      }
+
+      document.getElementById('hitster-result-icon').textContent = correct ? '✓' : '✗';
+      document.getElementById('hitster-result-icon').style.color = correct ? 'var(--green)' : 'var(--accent)';
+      document.getElementById('hitster-meta-artist').textContent = currentTrack.artist;
+      document.getElementById('hitster-meta-title').textContent  = currentTrack.title;
+      document.getElementById('hitster-meta-year').textContent   = currentTrack.year;
+      document.getElementById('hitster-result-text').textContent = correct
+        ? 'Goed geplaatst! Kaartje toegevoegd aan je tijdlijn.'
+        : `Helaas — dit was ${currentTrack.year}. Kaartje gaat terug.`;
+    } else {
+      document.getElementById('hitster-result-icon').textContent = '?';
+      document.getElementById('hitster-result-icon').style.color = 'var(--muted)';
+      document.getElementById('hitster-meta-artist').textContent = '';
+      document.getElementById('hitster-meta-title').textContent  = 'Info niet beschikbaar';
+      document.getElementById('hitster-meta-year').textContent   = '';
+      document.getElementById('hitster-result-text').textContent = 'Kon trackinfo niet laden — controleer het kaartje zelf.';
+    }
+
+    document.getElementById('hitster-result-card').className =
+      'hitster-result-card ' + (correct ? 'result-correct' : 'result-wrong');
+    document.getElementById('timeline-label').textContent = 'Jouw tijdlijn';
+    renderTimeline(false);
+
+    const won = hitsterCorrect >= HITSTER_TARGET;
+    const nextBtn = document.getElementById('hitster-next-btn');
+    nextBtn.textContent = won ? '🎉 Gewonnen! Nieuw spel' : 'Volgende kaartje →';
+    nextBtn.onclick     = won ? hitsterWin : hitsterNextRound;
+
+    show('hitster-result');
+  }
+
+  function hitsterNextRound() {
+    round++;
+    currentTrack = null;
+    hitsterSlot  = null;
+
+    hide('screen-hitster');
+
+    const result = document.getElementById('scan-result');
+    result.style.display = 'none';
+    result.textContent   = '';
+    result.style.color   = '';
+    document.getElementById('round-display').textContent = round;
+
+    show('screen-scan');
+    startScanner();
+  }
+
+  function hitsterWin() {
+    hitsterTimeline = [];
+    hitsterCorrect  = 0;
+    round = 1;
+    currentTrack = null;
+    hide('screen-hitster');
+    show('screen-difficulty');
+  }
+
+  function buildHitsterWaveform() {
+    const wf = document.getElementById('hitster-waveform');
+    wf.innerHTML = '';
+    const heights = [8,14,20,16,10,18,22,12,8,16,20,14,10,18,12];
+    const speeds  = ['0.4s','0.6s','0.5s','0.7s','0.45s','0.55s','0.65s','0.5s','0.4s','0.6s','0.5s','0.7s','0.45s','0.55s','0.65s'];
+    heights.forEach((h, i) => {
+      const b = document.createElement('div');
+      b.className = 'wave-bar';
+      b.style.height = h + 'px';
+      b.style.setProperty('--spd', speeds[i]);
+      wf.appendChild(b);
+    });
+  }
+
+  function setHitsterWaveformActive(on) {
+    document.getElementById('hitster-waveform').querySelectorAll('.wave-bar').forEach(b => {
+      b.classList.toggle('active', on);
+    });
   }
 
   // ─── UI HELPERS ────────────────────────────────────────────
