@@ -242,7 +242,7 @@
       height: 100%; background: var(--accent); border-radius: 2px; width: 100%;
     }
     .bonus-bar-fill.running {
-      animation: bonusCountdown 3s linear forwards;
+      animation: bonusCountdown 4s linear forwards;
     }
     @keyframes bonusCountdown { from { width: 100%; } to { width: 0%; } }
 
@@ -734,7 +734,7 @@
   };
 
   const TARGET           = 10;
-  const BONUS_WINDOW_MS  = 3000;
+  const BONUS_WINDOW_MS  = 4000;
 
   // ─── STATE ──────────────────────────────────────────────────
   let accessToken     = localStorage.getItem('access_token');
@@ -1075,14 +1075,10 @@
 
     if (autoPauseTimeout) clearTimeout(autoPauseTimeout);
     autoPauseTimeout = setTimeout(() => {
-      if (isPlaying) {
-        player.pause().then(() => {
-          isPlaying = false;
-          document.getElementById('status-dot').className        = 'status-dot paused';
-          document.getElementById('playback-status').textContent = 'Gepauzeerd';
-          document.getElementById('toggle-btn').textContent      = '▶ Verder luisteren';
-          setWaveformActive(false);
-        });
+      if (!bonusClaimed) {
+        const zone = document.getElementById('bonus-zone');
+        zone.classList.add('fading');
+        setTimeout(() => { zone.style.display = 'none'; zone.classList.remove('fading'); }, 400);
       }
     }, BONUS_WINDOW_MS);
 
@@ -1107,11 +1103,6 @@
         document.getElementById('playback-status').textContent = 'Aan het spelen';
         document.getElementById('toggle-btn').textContent      = '⏸ Pauzeer';
         setWaveformActive(true);
-        if (!bonusClaimed) {
-          const zone = document.getElementById('bonus-zone');
-          zone.classList.add('fading');
-          setTimeout(() => { zone.style.display = 'none'; zone.classList.remove('fading'); }, 400);
-        }
       });
     }
   }
@@ -1137,12 +1128,22 @@
     if (bonusClaimed) return;
     bonusClaimed = true;
 
+    if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
+
     const btn  = document.getElementById('btn-bonus');
     const fill = document.getElementById('bonus-bar-fill');
-    btn.className       = 'btn-bonus claimed';
-    btn.textContent     = '⚡ Bonus gespeeld!';
+    btn.className        = 'btn-bonus claimed';
+    btn.textContent      = '⚡ Bonus gespeeld!';
     fill.style.animation = 'none';
-    fill.style.width     = '100%';
+    fill.style.width     = '0%';
+
+    player.pause().then(() => {
+      isPlaying = false;
+      document.getElementById('status-dot').className        = 'status-dot paused';
+      document.getElementById('playback-status').textContent = 'Gepauzeerd';
+      document.getElementById('toggle-btn').textContent      = '▶ Verder luisteren';
+      setWaveformActive(false);
+    });
   }
 
   // ─── CONTINUE TO PLACING ────────────────────────────────────

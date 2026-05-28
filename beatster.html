@@ -368,34 +368,6 @@
     font-weight: 500;
   }
 
-  /* ---- BONUS BANNER ---- */
-  .bonus-banner {
-    background: linear-gradient(135deg, rgba(240,224,64,0.12), rgba(240,224,64,0.04));
-    border: 1px solid rgba(240,224,64,0.3);
-    border-radius: 10px;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    animation: fadeUp 0.3s ease forwards;
-  }
-  .bonus-text {
-    font-size: 13px;
-    line-height: 1.4;
-  }
-  .bonus-text strong {
-    color: var(--accent);
-    display: block;
-    font-size: 14px;
-    margin-bottom: 2px;
-  }
-  .bonus-pts {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--accent);
-    white-space: nowrap;
-  }
 
   /* ---- CONTROLS ---- */
   .controls {
@@ -642,46 +614,24 @@
       </div>
     </div>
 
-    <!-- Countdown bar (shown during 3s bonus window) -->
+    <!-- Countdown bar (shown during 4s bonus window) -->
     <div class="countdown-wrap" id="countdown-wrap" style="display:none">
       <div class="countdown-bar-bg">
         <div class="countdown-bar-fill" id="countdown-fill" style="width:100%"></div>
       </div>
-      <p class="countdown-label">Auto-pauze over <span id="countdown-num">3</span>s</p>
-    </div>
-
-    <!-- Bonus banner (shown after auto-pause) -->
-    <div class="bonus-banner" id="bonus-banner" style="display:none">
-      <div class="bonus-text">
-        <strong>⚡ Bonusronde!</strong>
-        Raad je het nu? Dan krijg je extra punten.
-      </div>
-      <div class="bonus-pts">+2</div>
+      <p class="countdown-label">Bonustijd: <span id="countdown-num">4</span>s</p>
     </div>
 
     <!-- Controls -->
     <div class="controls" id="controls">
-      <!-- State A: playing with countdown -->
+      <!-- State A: playing with bonus button -->
       <div id="ctrl-playing">
-        <button class="btn-reveal" onclick="revealTrack(true)">
-          Onthullen (bonus: +2 pt)
-        </button>
-        <button class="btn-secondary" style="margin-top:10px" onclick="skipBonus()">
-          Meer spelen →
+        <button class="btn-reveal" onclick="claimBonus()">
+          Ik ken dit! (+2 pt bonus)
         </button>
       </div>
 
-      <!-- State A2: auto-paused, bonus window open -->
-      <div id="ctrl-paused" style="display:none">
-        <button class="btn-play" onclick="resumePlayback()">
-          ▶ Doorgaan met luisteren
-        </button>
-        <button class="btn-reveal" style="margin-top:10px" onclick="revealTrack(true)">
-          Onthullen (bonus: +2 pt)
-        </button>
-      </div>
-
-      <!-- State B: playing normally (after skipping bonus) -->
+      <!-- State B: playing normally (after bonus window expired) -->
       <div id="ctrl-playing-normal" style="display:none">
         <button class="btn-reveal" onclick="revealTrack(false)">
           Onthullen
@@ -786,9 +736,7 @@
     document.getElementById('info-hidden').style.display = 'block';
     document.getElementById('info-revealed').style.display = 'none';
     document.getElementById('countdown-wrap').style.display = 'flex';
-    document.getElementById('bonus-banner').style.display = 'none';
     document.getElementById('ctrl-playing').style.display = 'block';
-    document.getElementById('ctrl-paused').style.display = 'none';
     document.getElementById('ctrl-playing-normal').style.display = 'none';
     document.getElementById('ctrl-revealed').style.display = 'none';
     document.getElementById('ctrl-next').style.display = 'none';
@@ -805,11 +753,11 @@
     state.bonusActive = true;
     const fill = document.getElementById('countdown-fill');
     const num = document.getElementById('countdown-num');
-    const duration = 3000;
+    const duration = 4000;
     const start = Date.now();
 
     fill.style.width = '100%';
-    num.textContent = '3';
+    num.textContent = '4';
 
     clearTimeout(state.countdownTimer);
     clearInterval(state.countdownInterval);
@@ -823,43 +771,29 @@
 
       if (remaining <= 0) {
         clearInterval(state.countdownInterval);
-        autoPause();
+        bonusWindowExpired();
       }
     }, 50);
   }
 
-  function autoPause() {
+  function bonusWindowExpired() {
+    state.bonusActive = false;
+    document.getElementById('countdown-wrap').style.display = 'none';
+    document.getElementById('ctrl-playing').style.display = 'none';
+    document.getElementById('ctrl-playing-normal').style.display = 'block';
+  }
+
+  function claimBonus() {
+    clearInterval(state.countdownInterval);
     state.bonusActive = true;
     document.getElementById('countdown-wrap').style.display = 'none';
-    document.getElementById('bonus-banner').style.display = 'flex';
     document.getElementById('ctrl-playing').style.display = 'none';
-    document.getElementById('ctrl-paused').style.display = 'block';
     document.getElementById('album-art').classList.remove('playing');
     document.getElementById('status-dot').className = 'status-dot paused';
     document.getElementById('status-text').textContent = 'Gepauzeerd';
     setWaveformActive(false);
     // In real app: player.pause()
-  }
-
-  function resumePlayback() {
-    state.bonusActive = false;
-    document.getElementById('bonus-banner').style.display = 'none';
-    document.getElementById('ctrl-paused').style.display = 'none';
-    document.getElementById('ctrl-playing-normal').style.display = 'block';
-    document.getElementById('album-art').classList.add('playing');
-    document.getElementById('status-dot').className = 'status-dot playing';
-    document.getElementById('status-text').textContent = 'Aan het spelen';
-    setWaveformActive(true);
-    // In real app: player.resume()
-  }
-
-  function skipBonus() {
-    clearInterval(state.countdownInterval);
-    state.bonusActive = false;
-    document.getElementById('countdown-wrap').style.display = 'none';
-    document.getElementById('bonus-banner').style.display = 'none';
-    document.getElementById('ctrl-playing').style.display = 'none';
-    document.getElementById('ctrl-playing-normal').style.display = 'block';
+    revealTrack(true);
   }
 
   // ---- REVEAL ----
@@ -874,7 +808,6 @@
     document.getElementById('info-hidden').style.display = 'none';
     document.getElementById('info-revealed').style.display = 'block';
     document.getElementById('countdown-wrap').style.display = 'none';
-    document.getElementById('bonus-banner').style.display = 'none';
     document.getElementById('ctrl-playing').style.display = 'none';
     document.getElementById('ctrl-playing-normal').style.display = 'none';
 
