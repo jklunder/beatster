@@ -979,9 +979,16 @@
     if (!pendingGameStart) return;
     player.getCurrentState().then(state => {
       if (!pendingGameStart) return;
-      if (state && !state.paused) {
-        pendingGameStart = false;
-        showGameScreen();
+      if (state && state.track_window && state.track_window.current_track) {
+        if (state.paused) {
+          player.resume().then(() => {
+            pendingGameStart = false;
+            showGameScreen();
+          });
+        } else {
+          pendingGameStart = false;
+          showGameScreen();
+        }
       } else if (Date.now() < deadline) {
         setTimeout(() => pollForPlayback(deadline), 300);
       } else {
