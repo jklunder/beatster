@@ -632,9 +632,7 @@
   let round           = 1;
   let isPlaying       = true;
 
-  let bonusClaimed    = false;
-  let bonusExpired    = false;
-  let bonusTimeout    = null;
+  let bonusClaimed     = false;
   let autoPauseTimeout = null;
   let srPlacementOk   = false;
 
@@ -848,7 +846,6 @@
 
     isPlaying    = true;
     bonusClaimed = false;
-    bonusExpired = false;
 
     document.getElementById('status-dot').className        = 'status-dot playing';
     document.getElementById('playback-status').textContent = 'Aan het spelen';
@@ -911,21 +908,11 @@
     // Force reflow so the animation restarts cleanly
     void fill.offsetWidth;
     fill.className = 'bonus-bar-fill running';
-
-    if (bonusTimeout) clearTimeout(bonusTimeout);
-    bonusTimeout = setTimeout(() => {
-      if (!bonusClaimed) {
-        bonusExpired = true;
-        zone.classList.add('fading');
-        setTimeout(() => { zone.style.display = 'none'; zone.classList.remove('fading'); }, 400);
-      }
-    }, BONUS_WINDOW_MS);
   }
 
   function claimBonus() {
-    if (bonusExpired || bonusClaimed) return;
+    if (bonusClaimed) return;
     bonusClaimed = true;
-    clearTimeout(bonusTimeout);
 
     const btn  = document.getElementById('btn-bonus');
     const fill = document.getElementById('bonus-bar-fill');
@@ -944,7 +931,6 @@
         setWaveformActive(false);
       });
     }
-    if (bonusTimeout) clearTimeout(bonusTimeout);
 
     document.getElementById('bonus-active-badge').style.display = bonusClaimed ? '' : 'none';
 
@@ -967,7 +953,7 @@
     tokens--;
     currentTrack = null;
     if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
-    if (bonusTimeout) clearTimeout(bonusTimeout);
+
     hide('screen-game');
     resetScanScreen();
     show('screen-scan');
@@ -1067,9 +1053,8 @@
     round++;
     currentTrack = null;
     bonusClaimed = false;
-    bonusExpired = false;
     if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
-    if (bonusTimeout) clearTimeout(bonusTimeout);
+
     document.getElementById('round-display').textContent = round;
 
     hide('screen-game');
@@ -1083,9 +1068,8 @@
     round        = 1;
     currentTrack = null;
     bonusClaimed = false;
-    bonusExpired = false;
     if (autoPauseTimeout) { clearTimeout(autoPauseTimeout); autoPauseTimeout = null; }
-    if (bonusTimeout) clearTimeout(bonusTimeout);
+
     hide('screen-game');
     show('screen-mode');
   }
