@@ -72,6 +72,19 @@
       border-radius: 20px;
     }
 
+    .btn-logout {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .btn-logout:hover { color: var(--text); }
+
     .spotify-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
@@ -580,9 +593,12 @@
 
 <header>
   <img src="beatster.png" alt="Beatster" class="logo-img" />
-  <div class="spotify-badge" id="spotify-badge" style="display:none">
-    <div class="spotify-dot"></div>
-    <span id="spotify-badge-text">Spotify verbonden</span>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="spotify-badge" id="spotify-badge" style="display:none">
+      <div class="spotify-dot"></div>
+      <span id="spotify-badge-text">Spotify verbonden</span>
+    </div>
+    <button class="btn-logout" id="btn-logout" style="display:none" onclick="logout()">Uitloggen</button>
   </div>
 </header>
 
@@ -728,7 +744,7 @@
 
 </main>
 
-<footer>Beatster · Spotify Premium vereist</footer>
+<footer>Beatster · Spotify Premium vereist · <span style="opacity:0.5">v0.1.1</span></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.umd.min.js"></script>
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
@@ -839,8 +855,16 @@
       hide('screen-login');
       show('screen-scan');
       document.getElementById('spotify-badge').style.display = '';
+      document.getElementById('btn-logout').style.display = '';
     }
   });
+
+  function logout() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('token_expiry');
+    location.reload();
+  }
 
   // ─── WAVEFORM ──────────────────────────────────────────────
   function buildWaveform() {
